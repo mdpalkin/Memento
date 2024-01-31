@@ -28,14 +28,18 @@ export const App = () => {
     const changeFilter = (filter: FilterValues) => {
         setFilter(filter)
     }
-
+    const addTask = (title: string) => {
+        const newTask = {id: v1(), title, isDone: false}
+        setTasks([newTask, ...tasks])
+    }
     return (
         <div>
             <Todolist
                 title={'What to learn?'}
                 tasks={tasksForTodolist}
                 changeFilter={changeFilter}
-                removeTask={removeTask}/>
+                removeTask={removeTask}
+                addTask={addTask}/>
         </div>
     )
 }
