@@ -1,0 +1,11 @@
+.error {
+    border: 1px red solid;
+}
+
+.error-message {
+    color: red;
+}
+
+.active-filter {
+    opacity: 0.4;
+}
