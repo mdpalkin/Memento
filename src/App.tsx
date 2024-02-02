@@ -1,4 +1,4 @@
-import './styles/styles.css'
+import '@testing-library/jest-dom'
 import {TaskType, Todolist} from "./features/Todolist/Todolist.tsx";
 import {useState} from "react";
 import {v1} from "uuid";
@@ -6,6 +6,7 @@ import {AddItemForm} from "./components/AddItemForm/AddItemForm.tsx";
 import Layout, {Header} from "antd/lib/layout/layout";
 import {GiBrainstorm} from "react-icons/gi";
 import {Typography} from "antd";
+import './styles/styles.css'
 
 export const App = () => {
 
@@ -129,7 +130,7 @@ export const App = () => {
 
 export type FilterValues = 'all' | 'active' | 'completed'
 
-type TodolistType = {
+export type TodolistType = {
     id: string
     title: string
     filter: FilterValues
