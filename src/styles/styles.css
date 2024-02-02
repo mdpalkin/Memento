@@ -1,11 +1,24 @@
-.error {
-    border: 1px red solid;
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
 }
 
-.error-message {
-    color: red;
+.App {
+    padding: 30px;
 }
 
-.active-filter {
-    opacity: 0.4;
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    font-size: 20px;
+}
+
+.todolists {
+    display: flex;
+    gap: 40px;
+    margin-top: 30px;
 }

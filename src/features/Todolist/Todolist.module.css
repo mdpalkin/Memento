@@ -1,0 +1,19 @@
+.title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.task {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 5px;
+    justify-content: space-between;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

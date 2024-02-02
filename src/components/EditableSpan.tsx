@@ -1,4 +1,6 @@
-import {ChangeEvent, useState} from "react";
+import {ChangeEvent, CSSProperties, useState} from "react";
+import {Typography} from "antd";
+import Input from "antd/lib/input/Input";
 
 export const EditableSpan = (props: Props) => {
 
@@ -22,8 +24,8 @@ export const EditableSpan = (props: Props) => {
     return (
         <>
             {editMode
-                ? <input value={text} autoFocus onChange={textHandler} onBlur={onBlurHandler}/>
-                : <span onDoubleClick={activateViewMode}>{props.title}</span>
+                ? <Input value={text} size={'small'} autoFocus onChange={textHandler} onBlur={onBlurHandler}/>
+                : <Typography style={props.style} onDoubleClick={activateViewMode}>{props.title}</Typography>
             }
         </>
     )
@@ -31,5 +33,6 @@ export const EditableSpan = (props: Props) => {
 
 type Props = {
     title: string
-    onChange: Function
+    onChange: (newTitle: string) => void
+    style?: CSSProperties
 }
