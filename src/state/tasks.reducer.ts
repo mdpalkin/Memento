@@ -1,8 +1,21 @@
 import {TasksStateType} from "../App.tsx";
 import {v1} from "uuid";
-import {AddTodolistType, RemoveTodolistType} from "./todolists.reducer.ts";
+import {AddTodolistType, RemoveTodolistType, todolistId1, todolistId2} from "./todolists.reducer.ts";
 
-export const tasksReducer = (state: TasksStateType, action: TaskReducerActionType): TasksStateType => {
+const initialState: TasksStateType = {
+    [todolistId1]: [
+        {id: v1(), title: "HTML&CSS", isDone: true},
+        {id: v1(), title: "JavaScript", isDone: false},
+        {id: v1(), title: "React", isDone: true},
+    ],
+    [todolistId2]: [
+        {id: v1(), title: "Milk", isDone: true},
+        {id: v1(), title: "Bread", isDone: true},
+        {id: v1(), title: "Meat", isDone: false},
+    ],
+}
+
+export const tasksReducer = (state: TasksStateType = initialState, action: TaskReducerActionType): TasksStateType => {
     switch (action.type) {
          case 'REMOVE-TASK': {
              return {...state, [action.todolistId]: state[action.todolistId].filter(task =>
