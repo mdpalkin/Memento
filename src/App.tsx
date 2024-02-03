@@ -1,4 +1,3 @@
-import '@testing-library/jest-dom'
 import {TaskType, Todolist} from "./features/Todolist/Todolist.tsx";
 import {useState} from "react";
 import {v1} from "uuid";
@@ -136,6 +135,6 @@ export type TodolistType = {
     filter: FilterValues
 }
 
-type TasksStateType = {
+export type TasksStateType = {
     [key: string]: TaskType[]
 }
