@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react'
 import {todolistsApi, TodolistType} from "../api/todolists-api.ts";
 
 export default {
-    title: 'API',
+    title: 'API/TodolistAPI',
 
 }
 
