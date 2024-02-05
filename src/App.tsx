@@ -1,4 +1,4 @@
-import {TaskType, Todolist} from "./features/Todolist/Todolist.tsx";
+import {Todolist} from "./features/Todolist/Todolist.tsx";
 import {v1} from "uuid";
 import {AddItemForm} from "./components/AddItemForm/AddItemForm.tsx";
 import Layout, {Header} from "antd/lib/layout/layout";
@@ -8,6 +8,8 @@ import './styles/styles.css'
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootState} from "./state/store.ts";
 import {addTodolist} from "./state/todolists.reducer.ts";
+import {useCallback} from "react";
+import {TaskType} from "./features/Task.tsx";
 
 export const App = () => {
 
@@ -15,10 +17,10 @@ export const App = () => {
 
     const dispatch = useDispatch()
 
-    const addTodolistHandler = (title: string) => {
+    const addTodolistHandler =  useCallback((title: string) => {
         const newTodolistId = v1()
         dispatch(addTodolist(newTodolistId, title))
-    }
+    }, [dispatch])
 
 
     return (

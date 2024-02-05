@@ -1,8 +1,8 @@
-import {ChangeEvent, CSSProperties, useState} from "react";
+import  {ChangeEvent, CSSProperties, memo, useState} from "react";
 import {Typography} from "antd";
 import Input from "antd/lib/input/Input";
 
-export const EditableSpan = (props: Props) => {
+export const EditableSpan = memo((props: Props) => {
 
     const [text, setText] = useState('')
     const [editMode, setEditMode] = useState(false)
@@ -29,7 +29,7 @@ export const EditableSpan = (props: Props) => {
             }
         </>
     )
-}
+})
 
 type Props = {
     title: string

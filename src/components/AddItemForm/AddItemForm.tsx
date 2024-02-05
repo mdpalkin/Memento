@@ -1,11 +1,11 @@
-import {ChangeEvent, KeyboardEvent, useState} from "react";
+import {ChangeEvent, KeyboardEvent, memo, useState} from "react";
 import '../../styles/styles.css'
 import {Button, Typography} from "antd";
 import Input from "antd/lib/input/Input";
 import s from './AddItemForm.module.css'
 import {PlusOutlined} from "@ant-design/icons";
 
-export const AddItemForm = (props: Props) => {
+export const AddItemForm = memo((props: Props) => {
 
     const [text, setText] = useState('')
 
@@ -50,7 +50,7 @@ export const AddItemForm = (props: Props) => {
             {error && <Typography className={s.errorMessage}>{error}</Typography>}
         </div>
     )
-}
+})
 
 type Props = {
     callback: (text: string) => void
