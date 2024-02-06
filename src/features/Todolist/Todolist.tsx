@@ -8,12 +8,12 @@ import Radio from "antd/lib/radio/index";
 import Card from "antd/lib/card/Card";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootState, StoreType} from "../../state/store.ts";
-import {addTask, fetchTasks} from "../../state/tasks.reducer.ts";
+import {addTaskTC, fetchTasks} from "../../state/tasks.reducer.ts";
 import {
     changeTodolistFilter,
-    changeTodolistTitle,
+    changeTodolistTitleTC,
     FilterValues,
-    removeTodolist
+    removeTodolistTC
 } from "../../state/todolists.reducer.ts";
 import {memo, useCallback, useEffect, useMemo} from "react";
 import {Task} from "../Task.tsx";
@@ -31,7 +31,7 @@ export const Todolist = memo(({title, todolistId, filter}: Props) => {
     }, []);
 
     const addTaskHandler = useCallback((title: string) => {
-        dispatch(addTask(todolistId, title))
+        dispatch(addTaskTC(todolistId, title))
     }, [todolistId, dispatch])
 
     const onAllClickHandler = useCallback(() =>dispatch(changeTodolistFilter(todolistId, 'all')), [todolistId, dispatch])
@@ -39,11 +39,11 @@ export const Todolist = memo(({title, todolistId, filter}: Props) => {
     const onCompletedClickHandler = useCallback(() => dispatch(changeTodolistFilter(todolistId, 'completed')), [todolistId, dispatch])
 
     const removeTodolistHandler = useCallback(() => {
-        dispatch(removeTodolist(todolistId))
+        dispatch(removeTodolistTC(todolistId))
     }, [todolistId, dispatch])
 
     const changeTodolistTitleHandler = useCallback((newTitle: string) => {
-        dispatch(changeTodolistTitle(todolistId, newTitle))
+        dispatch(changeTodolistTitleTC(todolistId, newTitle))
     }, [todolistId, dispatch])
 
 
@@ -53,7 +53,7 @@ export const Todolist = memo(({title, todolistId, filter}: Props) => {
             return tasks.filter((task: TaskType) => task.status === TaskStatuses.Completed)
         }
         if (filter === 'active') {
-            return tasks.filter((task: TaskType) => task.status === TaskStatuses.InProgress)
+            return tasks.filter((task: TaskType) => task.status === TaskStatuses.New)
         }
 
         return tasks

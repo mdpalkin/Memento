@@ -1,25 +1,20 @@
 import {v1} from "uuid";
 
 import '@testing-library/jest-dom'
-import {
-    addTask,
-    changeTaskStatus,
-    changeTaskTitle,
-    removeTask,
-    tasksReducer,
-    TasksStateType
-} from "../../state/tasks.reducer.ts";
+import {addTask, removeTask, tasksReducer, TasksStateType, updateTask} from "../../state/tasks.reducer.ts";
 import {TaskStatuses, TodoTaskPriority} from "../../api/tasks-api.ts";
 
-let todolistId1: string, todolistId2: string, startState: TasksStateType
+let todolistId1: string, todolistId2: string, startState: TasksStateType, taskId: string
 beforeEach(() => {
     todolistId1 = v1()
     todolistId2 = v1()
 
+    taskId = v1()
+
     startState = {
         [todolistId1]: [
             {
-                id: v1(),
+                id: taskId,
                 title: "HTML&CSS",
                 status: TaskStatuses.InProgress,
                 todoListId: todolistId1,
@@ -108,37 +103,49 @@ describe('Todolists reducer tets', () => {
     })
     test('task should be added', () => {
 
-        const newTaskTitle = 'New task!'
+        const newTask = {
+            id: v1(),
+            title: "New task!",
+            status: TaskStatuses.InProgress,
+            todoListId: todolistId1,
+            startDate: "",
+            addedDate: "",
+            deadline: "",
+            order: 0,
+            priority: TodoTaskPriority.Hi,
+            description: ""
+        }
 
-        const endState = tasksReducer(startState, addTask(todolistId1, newTaskTitle))
+        const endState = tasksReducer(startState, addTask(newTask))
 
         expect(endState[todolistId1].length).toBe(4)
-        expect(endState[todolistId1][0].title).toBe(newTaskTitle)
+        expect(endState[todolistId1][0].title).toBe('New task!')
         expect(endState[todolistId2].length).toBe(3)
 
     })
-
-    test('task should changed its name', () => {
-
-        const newTaskTitle = 'New task title!'
-
-        const endState = tasksReducer(startState, changeTaskTitle(todolistId2, startState[todolistId2][2].id, newTaskTitle))
-
-        expect(endState[todolistId2][2].title).toBe(newTaskTitle)
-        expect(endState[todolistId2][1].title).toBe('Bread')
-        expect(endState[todolistId1][2].title).toBe('React')
-
-    })
-
-    test('todolist should changed its status', () => {
-
-        const newTaskStatus = TaskStatuses.Completed
-
-        const endState = tasksReducer(startState, changeTaskStatus(todolistId2, startState[todolistId2][1].id, newTaskStatus))
-
-        expect(endState[todolistId2][1].status).toBe(TaskStatuses.Completed)
-        expect(endState[todolistId1][1].status).toBe(TaskStatuses.InProgress)
-        expect(endState[todolistId2][1].title).toBe('Bread')
-
-    })
 })
+
+
+test('task should be updated', () => {
+    const updatedTask = {
+        id: taskId,
+        title: "HTML",
+        status: TaskStatuses.Completed,
+        todoListId: todolistId1,
+        startDate: "",
+        addedDate: "",
+        deadline: "",
+        order: 0,
+        priority: TodoTaskPriority.Low,
+        description: ""
+    }
+
+
+    const endState = tasksReducer(startState, updateTask(updatedTask))
+
+    expect(endState[todolistId1][0].title).toBe('HTML')
+    expect(endState[todolistId1][0].status).toBe(TaskStatuses.Completed)
+    expect(endState[todolistId1][0].priority).toBe(TodoTaskPriority.Low)
+
+})
+

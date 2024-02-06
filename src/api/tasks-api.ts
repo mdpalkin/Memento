@@ -6,14 +6,14 @@ export const tasksApi = {
     },
 
     createTask(todolistId: string, title: string) {
-        return instance.post<ResponseType<TaskType[]>>(`/todo-lists/${todolistId}/tasks`, {title})
+        return instance.post<ResponseType<{item: TaskType}>>(`/todo-lists/${todolistId}/tasks`, {title})
     },
 
     removeTask(todolistId: string, taskId: string) {
         return instance.delete<ResponseType<{}>>(`/todo-lists/${todolistId}/tasks/${taskId}`)
     },
 
-    updateTask(todolistId: string, taskId: string, model: TaskUpdate) {
+    updateTask(todolistId: string, taskId: string, model: UpdateDomainTaskModelType) {
         return instance.put<ResponseType<{ item: TaskType }>>(`/todo-lists/${todolistId}/tasks/${taskId}`, model)
     }
 }
@@ -26,10 +26,10 @@ type GetTasksResponse = {
     error: string | null
 }
 
-export type TaskUpdate = {
+export type UpdateDomainTaskModelType = {
     title: string
     description: string
-    status: number
+    status: TaskStatuses
     priority: number
     startDate: string
     deadline: string

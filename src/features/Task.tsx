@@ -1,4 +1,4 @@
-import {changeTaskStatus, changeTaskTitle, removeTask} from "../state/tasks.reducer.ts";
+import {removeTaskTC, updateTaskTC} from "../state/tasks.reducer.ts";
 import s from "./Todolist/Todolist.module.css";
 import Checkbox from "antd/lib/checkbox/Checkbox";
 import {EditableSpan} from "../components/EditableSpan.tsx";
@@ -7,21 +7,24 @@ import {DeleteOutlined} from "@ant-design/icons";
 import {useDispatch} from "react-redux";
 import {useCallback} from "react";
 import {TaskStatuses, TaskType} from "../api/tasks-api.ts";
+import {ThunkDispatch} from "redux-thunk";
+import {StoreType} from "../state/store.ts";
+import {UnknownAction} from "redux";
 
 export const Task = ({todolistId, task}: Props) => {
 
-    const dispatch = useDispatch()
+    const dispatch: ThunkDispatch<StoreType, never, UnknownAction> = useDispatch()
     const onRemoveHandler =  useCallback(() => {
-        dispatch(removeTask(todolistId, task.id))
+        dispatch(removeTaskTC(todolistId, task.id))
     }, [todolistId, task, dispatch])
 
     const onChangeStatusHandler = useCallback(() => {
         const isDone = task.status === TaskStatuses.Completed ? TaskStatuses.InProgress : TaskStatuses.Completed
-        dispatch(changeTaskStatus(todolistId, task.id, isDone))
+        dispatch(updateTaskTC(todolistId, task.id, {status: isDone}))
     }, [todolistId, task, dispatch])
 
     const changeTaskTitleHandler = useCallback((newTitle: string) => {
-        dispatch(changeTaskTitle(todolistId, task.id, newTitle))
+        dispatch(updateTaskTC(todolistId, task.id, {title: newTitle}))
     }, [todolistId, task, dispatch])
 
     return <li className={s.task} key={task.id}>

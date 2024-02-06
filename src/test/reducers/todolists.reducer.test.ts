@@ -45,14 +45,19 @@ describe('Todolist reducer test', () => {
     })
     test('todolist should be added', () => {
 
-        const newTodolistTitle = 'New todolist!'
-        const newTodolistId = v1()
+        const newTodolist = {
+            id: v1(),
+            title: 'New todolist!',
+            order: 0,
+            addedDate: '',
+            filter: 'all'
+        }
 
-        const endState = todolistsReducer(startState, addTodolist(newTodolistId, newTodolistTitle))
+        const endState = todolistsReducer(startState, addTodolist(newTodolist))
 
         expect(endState.length).toBe(3)
-        expect(endState[2].title).toBe(newTodolistTitle)
-        expect(endState[2].filter).toBe('all')
+        expect(endState[0].title).toBe('New todolist!')
+        expect(endState[0].filter).toBe('all')
 
     })
 
