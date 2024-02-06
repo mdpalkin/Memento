@@ -7,22 +7,28 @@ import s from './Todolist.module.css'
 import Radio from "antd/lib/radio/index";
 import Card from "antd/lib/card/Card";
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootState} from "../../state/store.ts";
-import {addTask} from "../../state/tasks.reducer.ts";
+import {AppRootState, StoreType} from "../../state/store.ts";
+import {addTask, fetchTasks} from "../../state/tasks.reducer.ts";
 import {
     changeTodolistFilter,
     changeTodolistTitle,
     FilterValues,
     removeTodolist
 } from "../../state/todolists.reducer.ts";
-import {memo, useCallback, useMemo} from "react";
+import {memo, useCallback, useEffect, useMemo} from "react";
 import {Task} from "../Task.tsx";
 import {TaskStatuses, TaskType} from "../../api/tasks-api.ts";
+import {ThunkDispatch} from "redux-thunk";
+import {UnknownAction} from "redux";
 
 export const Todolist = memo(({title, todolistId, filter}: Props) => {
 
     const tasks = useSelector((state: AppRootState) => state.tasks[todolistId])
-    const dispatch = useDispatch()
+    const dispatch: ThunkDispatch<StoreType, never, UnknownAction> = useDispatch()
+
+    useEffect(() => {
+        dispatch(fetchTasks(todolistId))
+    }, []);
 
     const addTaskHandler = useCallback((title: string) => {
         dispatch(addTask(todolistId, title))
@@ -44,17 +50,15 @@ export const Todolist = memo(({title, todolistId, filter}: Props) => {
     const tasksForTodolist: TaskType[] = useMemo( () => {
 
         if (filter === 'completed') {
-            return tasks.filter(task => task.status === TaskStatuses.Completed)
+            return tasks.filter((task: TaskType) => task.status === TaskStatuses.Completed)
         }
         if (filter === 'active') {
-            return tasks.filter(task => task.status === TaskStatuses.InProgress)
+            return tasks.filter((task: TaskType) => task.status === TaskStatuses.InProgress)
         }
 
         return tasks
 
     }, [filter, tasks])
-
-
 
     return (
         <Card>

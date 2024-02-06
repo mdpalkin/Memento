@@ -6,15 +6,22 @@ import {GiBrainstorm} from "react-icons/gi";
 import {Typography} from "antd";
 import './styles/styles.css'
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootState} from "./state/store.ts";
-import {addTodolist} from "./state/todolists.reducer.ts";
-import {useCallback} from "react";
+import {AppRootState, StoreType} from "./state/store.ts";
+import {addTodolist, fetchTodolists, TodolistDomainType} from "./state/todolists.reducer.ts";
+import {useCallback, useEffect} from "react";
+import {ThunkDispatch} from "redux-thunk";
+import {UnknownAction} from "redux";
 
 export const App = () => {
 
+
+    useEffect(() => {
+        dispatch(fetchTodolists())
+    }, []);
+
     const todolists = useSelector((state: AppRootState) => state.todolists)
 
-    const dispatch = useDispatch()
+    const dispatch: ThunkDispatch<StoreType, never, UnknownAction> = useDispatch()
 
     const addTodolistHandler =  useCallback((title: string) => {
         const newTodolistId = v1()
@@ -35,7 +42,7 @@ export const App = () => {
             <Layout className={'App'} style={{minHeight: '93vh'}}>
                     <AddItemForm callback={addTodolistHandler}/>
                 <div className={'todolists'}>
-                    {todolists.map(todolist => {
+                    {todolists.map((todolist: TodolistDomainType) => {
                         return <Todolist
                             key={todolist.id}
                             title={todolist.title}

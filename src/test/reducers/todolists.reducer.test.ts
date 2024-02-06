@@ -3,7 +3,7 @@ import {
     addTodolist,
     changeTodolistFilter,
     changeTodolistTitle,
-    removeTodolist, TodolistDomainType,
+    removeTodolist, setTodolists, TodolistDomainType,
     todolistsReducer
 } from "../../state/todolists.reducer.ts";
 
@@ -76,6 +76,31 @@ describe('Todolist reducer test', () => {
 
         expect(endState.length).toBe(2)
         expect(endState[1].filter).toBe(newTodolistFilter)
+        expect(endState[0].filter).toBe('all')
+
+    })
+
+    test('todolist should be set to the state', () => {
+
+
+        const todolists = [
+            {
+                id: todolistId1,
+                title: 'What to learn?',
+                order: 0,
+                addedDate: '',
+            },
+            {
+                id: todolistId2,
+                title: 'What to buy?',
+                order: 0,
+                addedDate: '',
+            }
+        ]
+
+        const endState = todolistsReducer([], setTodolists(todolists))
+
+        expect(endState.length).toBe(2)
         expect(endState[0].filter).toBe('all')
 
     })

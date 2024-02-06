@@ -1,6 +1,7 @@
 import {v1} from "uuid";
-import {AddTodolistType, RemoveTodolistType} from "./todolists.reducer.ts";
-import {TaskStatuses, TaskType, TodoTaskPriority} from "../api/tasks-api.ts";
+import {AddTodolistType, RemoveTodolistType, SetTodolists} from "./todolists.reducer.ts";
+import {tasksApi, TaskStatuses, TaskType, TodoTaskPriority} from "../api/tasks-api.ts";
+import {Dispatch} from "redux";
 
 const initialState: TasksStateType = {}
 
@@ -57,6 +58,16 @@ export const tasksReducer = (state: TasksStateType = initialState, action: TaskR
             delete copyState[action.todolistId]
             return copyState
         }
+        case 'SET-TODOLISTS': {
+            const copyState = {...state}
+            action.todolists.forEach(todolist => {
+                copyState[todolist.id] = []
+            })
+            return copyState
+        }
+        case "SET-TASKS": {
+            return {...state, [action.todolistId]: action.tasks}
+        }
         default:
             return state
     }
@@ -70,6 +81,8 @@ export type TaskReducerActionType =
     | ChangeTaskStatusType
     | AddTodolistType
     | RemoveTodolistType
+    | SetTodolists
+    | SetTasksType
 
 type RemoveTaskType = ReturnType<typeof removeTask>
 export const removeTask = (todolistId: string, taskId: string) => ({
@@ -94,6 +107,18 @@ export const changeTaskStatus = (todolistId: string, taskId: string, newStatus: 
     type: 'CHANGE-TASK-STATUS',
     todolistId, taskId, newStatus
 } as const)
+
+type SetTasksType = ReturnType<typeof setTasks>
+export const setTasks = (todolistId: string, tasks: TaskType[]) => ({
+    type: 'SET-TASKS',
+    todolistId, tasks
+} as const)
+
+export const fetchTasks = (todolistId: string) => (dispatch: Dispatch) => {
+    tasksApi.getTasks(todolistId).then(res => {
+        dispatch(setTasks(todolistId, res.data.items))
+    })
+}
 
 export type TasksStateType = {
     [key: string]: TaskType[]
