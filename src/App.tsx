@@ -9,7 +9,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppRootState} from "./state/store.ts";
 import {addTodolist} from "./state/todolists.reducer.ts";
 import {useCallback} from "react";
-import {TaskType} from "./features/Task.tsx";
 
 export const App = () => {
 
@@ -48,16 +47,4 @@ export const App = () => {
             </Layout>
         </Layout>
     )
-}
-
-export type FilterValues = 'all' | 'active' | 'completed'
-
-export type TodolistType = {
-    id: string
-    title: string
-    filter: FilterValues
-}
-
-export type TasksStateType = {
-    [key: string]: TaskType[]
 }

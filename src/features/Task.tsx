@@ -6,6 +6,7 @@ import {Button} from "antd";
 import {DeleteOutlined} from "@ant-design/icons";
 import {useDispatch} from "react-redux";
 import {useCallback} from "react";
+import {TaskStatuses, TaskType} from "../api/tasks-api.ts";
 
 export const Task = ({todolistId, task}: Props) => {
 
@@ -15,7 +16,8 @@ export const Task = ({todolistId, task}: Props) => {
     }, [todolistId, task, dispatch])
 
     const onChangeStatusHandler = useCallback(() => {
-        dispatch(changeTaskStatus(todolistId, task.id, !task.isDone))
+        const isDone = task.status === TaskStatuses.Completed ? TaskStatuses.InProgress : TaskStatuses.Completed
+        dispatch(changeTaskStatus(todolistId, task.id, isDone))
     }, [todolistId, task, dispatch])
 
     const changeTaskTitleHandler = useCallback((newTitle: string) => {
@@ -24,7 +26,7 @@ export const Task = ({todolistId, task}: Props) => {
 
     return <li className={s.task} key={task.id}>
         <div style={{display: 'flex', gap: '20px'}}>
-            <Checkbox onChange={onChangeStatusHandler} checked={task.isDone}/>
+            <Checkbox onChange={onChangeStatusHandler} checked={task.status === TaskStatuses.Completed}/>
             <EditableSpan title={task.title} onChange={changeTaskTitleHandler}/>
         </div>
         <Button shape={'circle'} icon={<DeleteOutlined/>} onClick={onRemoveHandler}></Button>
@@ -36,10 +38,4 @@ export const Task = ({todolistId, task}: Props) => {
 type Props = {
     todolistId: string
     task: TaskType
-}
-
-export type TaskType = {
-    id: string
-    title: string
-    isDone: boolean
 }

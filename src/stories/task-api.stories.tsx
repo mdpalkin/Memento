@@ -1,7 +1,5 @@
 import {useEffect, useState} from 'react'
-import {todolistsApi} from "../api/todolists-api.ts";
 import {tasksApi} from "../api/tasks-api.ts";
-import {todolistId1} from "../state/todolists.reducer.ts";
 
 export default {
     title: 'API/Task',

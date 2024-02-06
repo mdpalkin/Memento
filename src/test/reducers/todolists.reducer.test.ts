@@ -1,35 +1,46 @@
 import {v1} from "uuid";
-import {TodolistType} from "../../App.tsx";
 import {
     addTodolist,
     changeTodolistFilter,
     changeTodolistTitle,
-    removeTodolist,
+    removeTodolist, TodolistDomainType,
     todolistsReducer
 } from "../../state/todolists.reducer.ts";
 
 import '@testing-library/jest-dom'
 
-let todolist1: string, todolist2: string, startState: TodolistType[]
+let todolistId1: string, todolistId2: string, startState: TodolistDomainType[]
 
 beforeEach(() => {
-    todolist1 = v1()
-    todolist2 = v1()
+    todolistId1 = v1()
+    todolistId2 = v1()
 
     startState = [
-        {id: todolist1, title: 'What to learn', filter: 'all'},
-        {id: todolist2, title: 'What to buy', filter: 'all'},
+        {
+            id: todolistId1,
+            title: 'What to learn?',
+            order: 0,
+            addedDate: '',
+            filter: 'all'
+        },
+        {
+            id: todolistId2,
+            title: 'What to buy?',
+            order: 0,
+            addedDate: '',
+            filter: 'all'
+        }
     ]
 })
 
-describe('Tasks reducer test', () => {
+describe('Todolist reducer test', () => {
     test('correct todolist should be removed', () => {
 
 
-        const endState = todolistsReducer(startState, removeTodolist(todolist1))
+        const endState = todolistsReducer(startState, removeTodolist(todolistId1))
 
         expect(endState.length).toBe(1)
-        expect(endState[0].id).toBe(todolist2)
+        expect(endState[0].id).toBe(todolistId2)
 
     })
     test('todolist should be added', () => {
@@ -49,11 +60,11 @@ describe('Tasks reducer test', () => {
 
         const newTodolistTitle = 'New todolist!'
 
-        const endState = todolistsReducer(startState, changeTodolistTitle(todolist2, newTodolistTitle))
+        const endState = todolistsReducer(startState, changeTodolistTitle(todolistId2, newTodolistTitle))
 
         expect(endState.length).toBe(2)
         expect(endState[1].title).toBe(newTodolistTitle)
-        expect(endState[0].title).toBe('What to learn')
+        expect(endState[0].title).toBe('What to learn?')
 
     })
 
@@ -61,7 +72,7 @@ describe('Tasks reducer test', () => {
 
         const newTodolistFilter = 'active'
 
-        const endState = todolistsReducer(startState, changeTodolistFilter(todolist2, newTodolistFilter))
+        const endState = todolistsReducer(startState, changeTodolistFilter(todolistId2, newTodolistFilter))
 
         expect(endState.length).toBe(2)
         expect(endState[1].filter).toBe(newTodolistFilter)

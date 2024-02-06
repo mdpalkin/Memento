@@ -18,6 +18,14 @@ export const tasksApi = {
     }
 }
 
+
+
+type GetTasksResponse = {
+    items: TaskType[],
+    totalCount: number
+    error: string | null
+}
+
 export type TaskUpdate = {
     title: string
     description: string
@@ -27,22 +35,31 @@ export type TaskUpdate = {
     deadline: string
 }
 
+export enum TaskStatuses {
+    New = 0,
+    InProgress = 1,
+    Completed = 2,
+    Draft = 3
+}
+
+export enum TodoTaskPriority {
+    Low = 0,
+    Middle = 1,
+    Hi = 2,
+    Urgently = 3,
+    Later = 4
+}
+
 export type TaskType = {
     description: string
     title: string
-    status: number
-    priority: number
-    startDate: Date
-    deadline: Date
+    status: TaskStatuses
+    priority: TodoTaskPriority
+    startDate: string
+    deadline: string
     id: string
     todoListId: string
     order: number
-    addedDate: Date
+    addedDate: string
 }
 
-
-type GetTasksResponse = {
-    items: TaskType[],
-    totalCount: number
-    error: string | null
-}

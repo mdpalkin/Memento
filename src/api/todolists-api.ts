@@ -19,9 +19,10 @@ export const todolistsApi = {
     }
 }
 
+
 export type TodolistType = {
     id: string
     title: string
-    addedDate: Date
+    addedDate: string
     order: number
 }

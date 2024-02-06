@@ -1,8 +1,15 @@
 import {v1} from "uuid";
-import {TasksStateType} from "../../App.tsx";
 
 import '@testing-library/jest-dom'
-import {addTask, changeTaskStatus, changeTaskTitle, removeTask, tasksReducer} from "../../state/tasks.reducer.ts";
+import {
+    addTask,
+    changeTaskStatus,
+    changeTaskTitle,
+    removeTask,
+    tasksReducer,
+    TasksStateType
+} from "../../state/tasks.reducer.ts";
+import {TaskStatuses, TodoTaskPriority} from "../../api/tasks-api.ts";
 
 let todolistId1: string, todolistId2: string, startState: TasksStateType
 beforeEach(() => {
@@ -11,15 +18,82 @@ beforeEach(() => {
 
     startState = {
         [todolistId1]: [
-            {id: v1(), title: "HTML&CSS", isDone: true},
-            {id: v1(), title: "JavaScript", isDone: false},
-            {id: v1(), title: "React", isDone: true},
+            {
+                id: v1(),
+                title: "HTML&CSS",
+                status: TaskStatuses.InProgress,
+                todoListId: todolistId1,
+                startDate: "",
+                addedDate: "",
+                deadline: "",
+                order: 0,
+                priority: TodoTaskPriority.Hi,
+                description: ""
+            },
+            {
+                id: v1(),
+                title: "JavaScript",
+                status: TaskStatuses.InProgress,
+                todoListId: todolistId1,
+                startDate: "",
+                addedDate: "",
+                deadline: "",
+                order: 0,
+                priority: TodoTaskPriority.Hi,
+                description: ""
+            },
+            {
+                id: v1(),
+                title: "React",
+                status: TaskStatuses.InProgress,
+                todoListId: todolistId1,
+                startDate: "",
+                addedDate: "",
+                deadline: "",
+                order: 0,
+                priority: TodoTaskPriority.Hi,
+                description: ""
+            },
         ],
         [todolistId2]: [
-            {id: v1(), title: "Milk", isDone: true},
-            {id: v1(), title: "Bread", isDone: false},
-            {id: v1(), title: "Meat", isDone: false},
-        ]}
+            {
+                id: v1(),
+                title: "Milk",
+                status: TaskStatuses.InProgress,
+                todoListId: todolistId2,
+                startDate: "",
+                addedDate: "",
+                deadline: "",
+                order: 0,
+                priority: TodoTaskPriority.Hi,
+                description: ""
+            },
+            {
+                id: v1(),
+                title: "Bread",
+                status: TaskStatuses.InProgress,
+                todoListId: todolistId2,
+                startDate: "",
+                addedDate: "",
+                deadline: "",
+                order: 0,
+                priority: TodoTaskPriority.Hi,
+                description: ""
+            },
+            {
+                id: v1(),
+                title: "Meat",
+                status: TaskStatuses.InProgress,
+                todoListId: todolistId2,
+                startDate: "",
+                addedDate: "",
+                deadline: "",
+                order: 0,
+                priority: TodoTaskPriority.Hi,
+                description: ""
+            },
+        ],
+    }
 })
 
 describe('Todolists reducer tets', () => {
@@ -58,12 +132,12 @@ describe('Todolists reducer tets', () => {
 
     test('todolist should changed its status', () => {
 
-        const newTaskStatus = true
+        const newTaskStatus = TaskStatuses.Completed
 
         const endState = tasksReducer(startState, changeTaskStatus(todolistId2, startState[todolistId2][1].id, newTaskStatus))
 
-        expect(endState[todolistId2][1].isDone).toBeTruthy()
-        expect(endState[todolistId1][1].isDone).toBeFalsy()
+        expect(endState[todolistId2][1].status).toBe(TaskStatuses.Completed)
+        expect(endState[todolistId1][1].status).toBe(TaskStatuses.InProgress)
         expect(endState[todolistId2][1].title).toBe('Bread')
 
     })

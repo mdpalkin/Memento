@@ -1,4 +1,3 @@
-import {FilterValues} from "../../App.tsx";
 import '../../styles/styles.css'
 import {AddItemForm} from "../../components/AddItemForm/AddItemForm.tsx";
 import {EditableSpan} from "../../components/EditableSpan.tsx";
@@ -10,9 +9,15 @@ import Card from "antd/lib/card/Card";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootState} from "../../state/store.ts";
 import {addTask} from "../../state/tasks.reducer.ts";
-import {changeTodolistFilter, changeTodolistTitle, removeTodolist} from "../../state/todolists.reducer.ts";
+import {
+    changeTodolistFilter,
+    changeTodolistTitle,
+    FilterValues,
+    removeTodolist
+} from "../../state/todolists.reducer.ts";
 import {memo, useCallback, useMemo} from "react";
-import {Task, TaskType} from "../Task.tsx";
+import {Task} from "../Task.tsx";
+import {TaskStatuses, TaskType} from "../../api/tasks-api.ts";
 
 export const Todolist = memo(({title, todolistId, filter}: Props) => {
 
@@ -39,10 +44,10 @@ export const Todolist = memo(({title, todolistId, filter}: Props) => {
     const tasksForTodolist: TaskType[] = useMemo( () => {
 
         if (filter === 'completed') {
-            return tasks.filter(task => task.isDone)
+            return tasks.filter(task => task.status === TaskStatuses.Completed)
         }
         if (filter === 'active') {
-            return tasks.filter(task => !task.isDone)
+            return tasks.filter(task => task.status === TaskStatuses.InProgress)
         }
 
         return tasks
