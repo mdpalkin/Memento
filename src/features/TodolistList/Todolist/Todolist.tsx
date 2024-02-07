@@ -1,23 +1,23 @@
-import '../../styles/styles.css'
-import {AddItemForm} from "../../components/AddItemForm/AddItemForm.tsx";
-import {EditableSpan} from "../../components/EditableSpan.tsx";
+import '../../../styles/styles.css'
+import {AddItemForm} from "../../../components/AddItemForm/AddItemForm.tsx";
+import {EditableSpan} from "../../../components/EditableSpan/EditableSpan.tsx";
 import {Button} from "antd"
 import {DeleteOutlined} from "@ant-design/icons";
 import s from './Todolist.module.css'
 import Radio from "antd/lib/radio/index";
 import Card from "antd/lib/card/Card";
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootState, StoreType} from "../../state/store.ts";
-import {addTaskTC, fetchTasks} from "../../state/tasks.reducer.ts";
+import {AppRootState, StoreType} from "../../../app/store.ts";
+import {addTaskTC, fetchTasks} from "./Task/tasks.reducer.ts";
 import {
     changeTodolistFilter,
     changeTodolistTitleTC,
     FilterValues,
     removeTodolistTC
-} from "../../state/todolists.reducer.ts";
+} from "./todolists.reducer.ts";
 import {memo, useCallback, useEffect, useMemo} from "react";
-import {Task} from "../Task.tsx";
-import {TaskStatuses, TaskType} from "../../api/tasks-api.ts";
+import {Task} from "./Task/Task.tsx";
+import {TaskStatuses, TaskType} from "../../../api/tasks-api.ts";
 import {ThunkDispatch} from "redux-thunk";
 import {UnknownAction} from "redux";
 

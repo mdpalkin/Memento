@@ -1,14 +1,14 @@
-import {removeTaskTC, updateTaskTC} from "../state/tasks.reducer.ts";
-import s from "./Todolist/Todolist.module.css";
+import {removeTaskTC, updateTaskTC} from "./tasks.reducer.ts";
+import s from "../Todolist.module.css";
 import Checkbox from "antd/lib/checkbox/Checkbox";
-import {EditableSpan} from "../components/EditableSpan.tsx";
+import {EditableSpan} from "../../../../components/EditableSpan/EditableSpan.tsx";
 import {Button} from "antd";
 import {DeleteOutlined} from "@ant-design/icons";
 import {useDispatch} from "react-redux";
 import {useCallback} from "react";
-import {TaskStatuses, TaskType} from "../api/tasks-api.ts";
+import {TaskStatuses, TaskType} from "../../../../api/tasks-api.ts";
 import {ThunkDispatch} from "redux-thunk";
-import {StoreType} from "../state/store.ts";
+import {StoreType} from "../../../../app/store.ts";
 import {UnknownAction} from "redux";
 
 export const Task = ({todolistId, task}: Props) => {

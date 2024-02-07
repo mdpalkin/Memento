@@ -1,6 +1,6 @@
-import {addTodolist, removeTodolist, TodolistDomainType, todolistsReducer} from "../../state/todolists.reducer.ts";
+import {addTodolist, removeTodolist, TodolistDomainType, todolistsReducer} from "../../features/TodolistList/Todolist/todolists.reducer.ts";
 import {v1} from "uuid";
-import {tasksReducer, TasksStateType} from "../../state/tasks.reducer.ts";
+import {tasksReducer, TasksStateType} from "../../features/TodolistList/Todolist/Task/tasks.reducer.ts";
 import {TodolistType} from "../../api/todolists-api.ts";
 
 test('ids should be equals', () => {

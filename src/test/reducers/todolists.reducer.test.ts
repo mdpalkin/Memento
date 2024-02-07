@@ -5,7 +5,7 @@ import {
     changeTodolistTitle,
     removeTodolist, setTodolists, TodolistDomainType,
     todolistsReducer
-} from "../../state/todolists.reducer.ts";
+} from "../../features/TodolistList/Todolist/todolists.reducer.ts";
 
 import '@testing-library/jest-dom'
 

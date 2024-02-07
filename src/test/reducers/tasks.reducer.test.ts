@@ -1,7 +1,7 @@
 import {v1} from "uuid";
 
 import '@testing-library/jest-dom'
-import {addTask, removeTask, tasksReducer, TasksStateType, updateTask} from "../../state/tasks.reducer.ts";
+import {addTask, removeTask, tasksReducer, TasksStateType, updateTask} from "../../features/TodolistList/Todolist/Task/tasks.reducer.ts";
 import {TaskStatuses, TodoTaskPriority} from "../../api/tasks-api.ts";
 
 let todolistId1: string, todolistId2: string, startState: TasksStateType, taskId: string

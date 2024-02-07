@@ -1,4 +1,4 @@
-import {todolistsApi, TodolistType} from "../api/todolists-api.ts";
+import {todolistsApi, TodolistType} from "../../../api/todolists-api.ts";
 import {Dispatch} from "redux";
 
 
@@ -30,13 +30,6 @@ export const todolistsReducer = (state: TodolistDomainType[] = initialState, act
 }
 
 // ACTIONS
-export type TodolistReducerActionType =
-    RemoveTodolistType
-    | AddTodolistType
-    | ChangeTodolistTitleType
-    | ChangeTodolistFilterType
-    | SetTodolists
-
 
 type ChangeTodolistFilterType = ReturnType<typeof changeTodolistFilter>
 export const changeTodolistFilter = (id: string, newFilter: FilterValues) => ({
@@ -74,26 +67,26 @@ export const setTodolists = (todolists: TodolistType[]) => ({
 
 // THUNKS
 
-export const fetchTodolists = () => (dispatch: Dispatch) => {
+export const fetchTodolists = () => (dispatch: Dispatch<TodolistReducerActionType>) => {
     todolistsApi.getTodolists()
         .then(res => {
             dispatch(setTodolists(res.data))
         })
 }
 
-export const removeTodolistTC = (todolistId: string) => (dispatch: Dispatch) => {
+export const removeTodolistTC = (todolistId: string) => (dispatch: Dispatch<TodolistReducerActionType>) => {
     todolistsApi.removeTodolist(todolistId).then(() => {
         dispatch(removeTodolist(todolistId))
     })
 }
 
-export const addTodolistTC = (title: string ) => (dispatch: Dispatch) => {
+export const addTodolistTC = (title: string ) => (dispatch: Dispatch<TodolistReducerActionType>) => {
     todolistsApi.createTodolist(title).then(res => {
         dispatch(addTodolist(res.data.data.item))
     })
 }
 
-export const changeTodolistTitleTC = (todolistId: string, title: string) => (dispatch: Dispatch) => {
+export const changeTodolistTitleTC = (todolistId: string, title: string) => (dispatch: Dispatch<TodolistReducerActionType>) => {
     todolistsApi.updateTodolist(todolistId, title).then(() => {
         dispatch(changeTodolistTitle(todolistId, title))
     })
@@ -104,3 +97,11 @@ export const changeTodolistTitleTC = (todolistId: string, title: string) => (dis
 export type TodolistDomainType = TodolistType & { filter: FilterValues }
 
 export type FilterValues = 'all' | 'active' | 'completed'
+
+export type TodolistReducerActionType =
+    RemoveTodolistType
+    | AddTodolistType
+    | ChangeTodolistTitleType
+    | ChangeTodolistFilterType
+    | SetTodolists
+
