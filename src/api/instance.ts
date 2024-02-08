@@ -10,3 +10,8 @@ export type ResponseType<D> = {
     messages: string[]
     data: D
 }
+
+export enum ResultCodes {
+    OK = 0,
+    ERROR = 1
+}

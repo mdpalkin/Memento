@@ -12,7 +12,8 @@ test('ids should be equals', () => {
         title: 'What to learn?',
         order: 0,
         addedDate: '',
-        filter: 'all'
+        filter: 'all',
+        status: 'idle'
     }
 
     const action = addTodolist(newTodolist)

@@ -21,14 +21,16 @@ beforeEach(() => {
             title: 'What to learn?',
             order: 0,
             addedDate: '',
-            filter: 'all'
+            filter: 'all',
+            entityStatus: "idle"
         },
         {
             id: todolistId2,
             title: 'What to buy?',
             order: 0,
             addedDate: '',
-            filter: 'all'
+            filter: 'all',
+            entityStatus: 'idle'
         }
     ]
 })
@@ -50,7 +52,8 @@ describe('Todolist reducer test', () => {
             title: 'New todolist!',
             order: 0,
             addedDate: '',
-            filter: 'all'
+            filter: 'all',
+            entityStatus: 'idle'
         }
 
         const endState = todolistsReducer(startState, addTodolist(newTodolist))

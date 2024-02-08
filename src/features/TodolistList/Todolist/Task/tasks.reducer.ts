@@ -2,6 +2,8 @@ import {AddTodolistType, RemoveTodolistType, SetTodolists} from "../todolists.re
 import {tasksApi, TaskType, UpdateDomainTaskModelType} from "../../../../api/tasks-api.ts";
 import {Dispatch} from "redux";
 import {AppRootState} from "../../../../app/store.ts";
+import {setAppStatus, SetAppStatusType, setError} from "../../../../app/app.reducer.ts";
+import {ResultCodes} from "../../../../api/instance.ts";
 
 const initialState: TasksStateType = {}
 
@@ -76,9 +78,11 @@ export const updateTask = (task: TaskType) => ({
 
 // THUNKS
 
-export const fetchTasks = (todolistId: string) => (dispatch: Dispatch<TaskReducerActionType>) => {
+export const fetchTasks = (todolistId: string) => (dispatch: Dispatch<TaskReducerActionType | SetAppStatusType>) => {
+    dispatch(setAppStatus('loading'))
     tasksApi.getTasks(todolistId).then(res => {
         dispatch(setTasks(todolistId, res.data.items))
+        dispatch(setAppStatus('succeeded'))
     })
 }
 
@@ -88,9 +92,21 @@ export const removeTaskTC = (todolistId: string, taskId: string) => (dispatch: D
     })
 }
 
-export const addTaskTC = (todolistId: string, title: string) => (dispatch: Dispatch<TaskReducerActionType>) => {
+export const addTaskTC = (todolistId: string, title: string) => (dispatch: Dispatch) => {
+    dispatch(setAppStatus('loading'))
     tasksApi.createTask(todolistId, title).then((res) => {
-        dispatch(addTask(res.data.data.item))
+        if (res.data.resultCode === ResultCodes.OK) {
+            dispatch(addTask(res.data.data.item))
+            dispatch(setAppStatus('succeeded'))
+        } else {
+            if (res.data.messages.length) {
+                dispatch(setError(res.data.messages[0]))
+            } else {
+                dispatch(setError('Some error occurred'))
+            }
+            dispatch(setAppStatus('failed'))
+        }
+
     })
 }
 
