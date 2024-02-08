@@ -1,6 +1,6 @@
 import {v1} from "uuid";
 import {
-    addTodolist,
+    addTodolist, changeEntityStatus,
     changeTodolistFilter,
     changeTodolistTitle,
     removeTodolist, setTodolists, TodolistDomainType,
@@ -111,5 +111,17 @@ describe('Todolist reducer test', () => {
         expect(endState.length).toBe(2)
         expect(endState[0].filter).toBe('all')
 
+    })
+
+    test('todolists entity status should be changed', () => {
+
+
+        const newTodolistEntityStatus = 'loading'
+
+        const endState = todolistsReducer(startState, changeEntityStatus(todolistId2, newTodolistEntityStatus ))
+
+        expect(endState.length).toBe(2)
+        expect(endState[1].entityStatus).toBe(newTodolistEntityStatus)
+        expect(endState[0].entityStatus).toBe('idle')
     })
 })

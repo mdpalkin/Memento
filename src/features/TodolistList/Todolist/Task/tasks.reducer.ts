@@ -36,7 +36,8 @@ export const tasksReducer = (state: TasksStateType = initialState, action: TaskR
             return copyState
         }
         case 'SET-TASKS': {
-            return {...state, [action.todolistId]: action.tasks}
+            return {...state, [action.todolistId]: action.tasks
+            }
         }
         case 'UPDATE-TASK': {
             return {
@@ -86,9 +87,20 @@ export const fetchTasks = (todolistId: string) => (dispatch: Dispatch<TaskReduce
     })
 }
 
-export const removeTaskTC = (todolistId: string, taskId: string) => (dispatch: Dispatch<TaskReducerActionType>) => {
-    tasksApi.removeTask(todolistId, taskId).then(() => {
-        dispatch(removeTask(todolistId, taskId))
+export const removeTaskTC = (todolistId: string, taskId: string) => (dispatch: Dispatch) => {
+    dispatch(setAppStatus('loading'))
+    tasksApi.removeTask(todolistId, taskId).then((res) => {
+        if (res.data.resultCode === ResultCodes.OK) {
+            dispatch(removeTask(todolistId, taskId))
+            dispatch(setAppStatus('succeeded'))
+        } else {
+            if (res.data.messages.length) {
+                dispatch(setError(res.data.messages[0]))
+            } else {
+                dispatch(setError('Some error occurred'))
+            }
+            dispatch(setAppStatus('failed'))
+        }
     })
 }
 
@@ -111,9 +123,11 @@ export const addTaskTC = (todolistId: string, title: string) => (dispatch: Dispa
 }
 
 export const updateTaskTC = (todolistId: string, taskId: string, changes: Partial<UpdateDomainTaskModelType>) =>
-    (dispatch: Dispatch<TaskReducerActionType>, getState: () => AppRootState) => {
+    (dispatch: Dispatch, getState: () => AppRootState) => {
 
     const task = getState().tasks[todolistId].find((task: TaskType) => task.id === taskId)
+
+    dispatch(setAppStatus('loading'))
 
     const apiModel: UpdateDomainTaskModelType = {
         title: task.title,
@@ -125,7 +139,17 @@ export const updateTaskTC = (todolistId: string, taskId: string, changes: Partia
          ...changes}
 
     tasksApi.updateTask(todolistId, taskId, apiModel).then(res => {
-        dispatch(updateTask(res.data.data.item))
+        if (res.data.resultCode === ResultCodes.OK) {
+            dispatch(updateTask(res.data.data.item))
+            dispatch(setAppStatus('succeeded'))
+        } else {
+            if (res.data.messages.length) {
+                dispatch(setError(res.data.messages[0]))
+            } else {
+                dispatch(setError('Some error occurred'))
+            }
+            dispatch(setAppStatus('failed'))
+        }
     })
 }
 

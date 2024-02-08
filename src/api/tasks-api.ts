@@ -1,4 +1,5 @@
 import {ResponseType, instance} from "./instance.ts";
+import {RequestStatusType} from "../app/app.reducer.ts";
 
 export const tasksApi = {
     getTasks(todolistId: string) {
@@ -63,3 +64,4 @@ export type TaskType = {
     addedDate: string
 }
 
+export type TaskDomainType = TaskType & {entityStatus: RequestStatusType}

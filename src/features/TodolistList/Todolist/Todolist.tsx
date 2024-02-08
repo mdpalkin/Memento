@@ -20,8 +20,9 @@ import {Task} from "./Task/Task.tsx";
 import {TaskStatuses, TaskType} from "../../../api/tasks-api.ts";
 import {ThunkDispatch} from "redux-thunk";
 import {UnknownAction} from "redux";
+import {RequestStatusType} from "../../../app/app.reducer.ts";
 
-export const Todolist = memo(({title, todolistId, filter}: Props) => {
+export const Todolist = memo(({title, todolistId, filter, entityStatus}: Props) => {
 
     const tasks = useSelector((state: AppRootState) => state.tasks[todolistId])
     const dispatch: ThunkDispatch<StoreType, never, UnknownAction> = useDispatch()
@@ -60,6 +61,9 @@ export const Todolist = memo(({title, todolistId, filter}: Props) => {
 
     }, [filter, tasks])
 
+    const isDisabled = entityStatus === 'loading'
+
+
     return (
         <Card>
             <div className={s.wrapper}>
@@ -68,11 +72,12 @@ export const Todolist = memo(({title, todolistId, filter}: Props) => {
                         <EditableSpan
                             style={{'fontSize': '20px'}}
                             title={title}
+                            disable={entityStatus === 'loading'}
                             onChange={changeTodolistTitleHandler} />
                     </h3>
-                    <Button shape={'circle'} icon={<DeleteOutlined/>} onClick={removeTodolistHandler}></Button>
+                    <Button shape={'circle'} disabled={isDisabled} icon={<DeleteOutlined/>} onClick={removeTodolistHandler}></Button>
                 </div>
-                <AddItemForm callback={addTaskHandler}/>
+                <AddItemForm callback={addTaskHandler} disabled={isDisabled}/>
                 <ul>
                     {tasksForTodolist.map(task => <Task key={task.id} task={task} todolistId={todolistId} /> )}
                 </ul>
@@ -92,4 +97,5 @@ type Props = {
     title: string
     filter: FilterValues
     todolistId: string
+    entityStatus: RequestStatusType
 }

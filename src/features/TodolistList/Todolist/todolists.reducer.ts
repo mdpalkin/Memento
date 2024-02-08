@@ -23,8 +23,11 @@ export const todolistsReducer = (state: TodolistDomainType[] = initialState, act
                 todolist.id === action.id ? {...todolist, filter: action.newFilter} : todolist)
         }
         case 'SET-TODOLISTS': {
-            return action.todolists.map(todolist => ({...todolist, filter: 'all', entityStatus: 'idle' }))
+            return action.todolists.map(todolist => ({...todolist, filter: 'all', entityStatus: 'idle'}))
         }
+        case "CHANGE-TODOLIST-ENTITY-STATUS":
+            return state.map(todolist =>
+                action.todolistId === todolist.id ? {...todolist, entityStatus: action.status} : todolist)
         default:
             return state
 
@@ -66,6 +69,12 @@ export const setTodolists = (todolists: TodolistType[]) => ({
     todolists
 } as const)
 
+type ChangeTodolistEntityStatusType = ReturnType<typeof changeEntityStatus>
+export const changeEntityStatus = (todolistId: string, status: RequestStatusType) => ({
+    type: 'CHANGE-TODOLIST-ENTITY-STATUS',
+    status, todolistId
+} as const)
+
 
 // THUNKS
 
@@ -78,13 +87,26 @@ export const fetchTodolists = () => (dispatch: Dispatch<TodolistReducerActionTyp
         })
 }
 
-export const removeTodolistTC = (todolistId: string) => (dispatch: Dispatch<TodolistReducerActionType>) => {
-    todolistsApi.removeTodolist(todolistId).then(() => {
-        dispatch(removeTodolist(todolistId))
+export const removeTodolistTC = (todolistId: string) => (dispatch: Dispatch) => {
+    dispatch(setAppStatus('loading'))
+    dispatch(changeEntityStatus( todolistId,'loading'))
+    todolistsApi.removeTodolist(todolistId).then((res) => {
+        if (res.data.resultCode === ResultCodes.OK) {
+            dispatch(removeTodolist(todolistId))
+            dispatch(setAppStatus('succeeded'))
+        } else {
+            if (res.data.messages.length) {
+                dispatch(setError(res.data.messages[0]))
+            } else {
+                dispatch(setError('Some error occurred'))
+            }
+            dispatch(setAppStatus('failed'))
+        }
     })
 }
 
-export const addTodolistTC = (title: string ) => (dispatch: Dispatch) => {
+export const addTodolistTC = (title: string) => (dispatch: Dispatch) => {
+    dispatch(setAppStatus('loading'))
     todolistsApi.createTodolist(title).then(res => {
         if (res.data.resultCode === ResultCodes.OK) {
             dispatch(addTodolist(res.data.data.item))
@@ -101,9 +123,20 @@ export const addTodolistTC = (title: string ) => (dispatch: Dispatch) => {
     })
 }
 
-export const changeTodolistTitleTC = (todolistId: string, title: string) => (dispatch: Dispatch<TodolistReducerActionType>) => {
-    todolistsApi.updateTodolist(todolistId, title).then(() => {
-        dispatch(changeTodolistTitle(todolistId, title))
+export const changeTodolistTitleTC = (todolistId: string, title: string) => (dispatch: Dispatch) => {
+    dispatch(setAppStatus('loading'))
+    todolistsApi.updateTodolist(todolistId, title).then((res) => {
+        if (res.data.resultCode === ResultCodes.OK) {
+            dispatch(changeTodolistTitle(todolistId, title))
+            dispatch(setAppStatus('succeeded'))
+        } else {
+            if (res.data.messages.length) {
+                dispatch(setError(res.data.messages[0]))
+            } else {
+                dispatch(setError('Some error occurred'))
+            }
+            dispatch(setAppStatus('failed'))
+        }
     })
 }
 
@@ -119,4 +152,4 @@ export type TodolistReducerActionType =
     | ChangeTodolistTitleType
     | ChangeTodolistFilterType
     | SetTodolists
-
+    | ChangeTodolistEntityStatusType

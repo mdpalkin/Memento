@@ -5,7 +5,7 @@ import Input from "antd/lib/input/Input";
 import s from './AddItemForm.module.css'
 import {PlusOutlined} from "@ant-design/icons";
 
-export const AddItemForm = memo((props: Props) => {
+export const AddItemForm = memo(({disabled = false, callback}: Props) => {
 
     const [text, setText] = useState('')
 
@@ -21,7 +21,7 @@ export const AddItemForm = memo((props: Props) => {
         const cutTitle = text.trim()
 
         if (cutTitle !== '') {
-            props.callback(cutTitle)
+            callback(cutTitle)
             setText('')
         } else {
             setError('Title is required')
@@ -37,6 +37,7 @@ export const AddItemForm = memo((props: Props) => {
         <div>
             <div className={s.wrapper}>
                 <Input
+                    disabled={disabled}
                     placeholder={'Type here...'}
                     style={{width: 'auto'}}
                     onChange={onNewTitleChangeHandler}
@@ -44,7 +45,7 @@ export const AddItemForm = memo((props: Props) => {
                     onKeyDown={onKeyPressHandler}
                     className={error ? s.error : ''}
                 />
-                <Button shape={'circle'} icon={<PlusOutlined style={{fontSize: '15px'}}/>} type={'primary'}
+                <Button disabled={disabled} shape={'circle'} icon={<PlusOutlined style={{fontSize: '15px'}}/>} type={'primary'}
                         onClick={callBackHandler}></Button>
             </div>
             {error && <Typography className={s.errorMessage}>{error}</Typography>}
@@ -54,4 +55,5 @@ export const AddItemForm = memo((props: Props) => {
 
 type Props = {
     callback: (text: string) => void
+    disabled?: boolean
 }

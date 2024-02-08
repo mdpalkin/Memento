@@ -23,6 +23,7 @@ export const TodolistList = () => {
                 title={todolist.title}
                 filter={todolist.filter}
                 todolistId={todolist.id}
+                entityStatus={todolist.entityStatus}
             />
         })}
     </div>

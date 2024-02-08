@@ -28,7 +28,7 @@ export const App = () => {
                 <AppHeader/>
             </Layout>
             <Layout className={'App'} style={{minHeight: '93vh'}}>
-                <Spin spinning={appStatus === 'loading'} fullscreen />
+                <Spin spinning={appStatus === 'loading'} />
                 <AddItemForm callback={addTodolistHandler}/>
                 <TodolistList/>
                 <ErrorSnackbar />
