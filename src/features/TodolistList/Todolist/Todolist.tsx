@@ -9,15 +9,10 @@ import Card from "antd/lib/card/Card";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootState, StoreType} from "../../../app/store.ts";
 import {addTaskTC, fetchTasks} from "./Task/tasks.reducer.ts";
-import {
-    changeTodolistFilter,
-    changeTodolistTitleTC,
-    FilterValues,
-    removeTodolistTC
-} from "./todolists.reducer.ts";
+import {changeTodolistFilter, changeTodolistTitleTC, FilterValues, removeTodolistTC} from "./todolists.reducer.ts";
 import {memo, useCallback, useEffect, useMemo} from "react";
 import {Task} from "./Task/Task.tsx";
-import {TaskStatuses, TaskType} from "../../../api/tasks-api.ts";
+import {TaskDomainType, TaskStatuses, TaskType} from "../../../api/tasks-api.ts";
 import {ThunkDispatch} from "redux-thunk";
 import {UnknownAction} from "redux";
 import {RequestStatusType} from "../../../app/app.reducer.ts";
@@ -48,13 +43,14 @@ export const Todolist = memo(({title, todolistId, filter, entityStatus}: Props) 
     }, [todolistId, dispatch])
 
 
-    const tasksForTodolist: TaskType[] = useMemo( () => {
+    const tasksForTodolist: TaskDomainType[] = useMemo( () => {
 
         if (filter === 'completed') {
             return tasks.filter((task: TaskType) => task.status === TaskStatuses.Completed)
         }
         if (filter === 'active') {
-            return tasks.filter((task: TaskType) => task.status === TaskStatuses.New)
+            return tasks.filter((task: TaskType) =>
+                task.status === TaskStatuses.InProgress || task.status === TaskStatuses.New)
         }
 
         return tasks
@@ -72,7 +68,7 @@ export const Todolist = memo(({title, todolistId, filter, entityStatus}: Props) 
                         <EditableSpan
                             style={{'fontSize': '20px'}}
                             title={title}
-                            disable={entityStatus === 'loading'}
+                            disabled={entityStatus === 'loading'}
                             onChange={changeTodolistTitleHandler} />
                     </h3>
                     <Button shape={'circle'} disabled={isDisabled} icon={<DeleteOutlined/>} onClick={removeTodolistHandler}></Button>

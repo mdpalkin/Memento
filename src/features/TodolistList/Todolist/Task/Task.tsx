@@ -6,7 +6,7 @@ import {Button} from "antd";
 import {DeleteOutlined} from "@ant-design/icons";
 import {useDispatch} from "react-redux";
 import {useCallback} from "react";
-import {TaskStatuses, TaskType} from "../../../../api/tasks-api.ts";
+import {TaskDomainType, TaskStatuses} from "../../../../api/tasks-api.ts";
 import {ThunkDispatch} from "redux-thunk";
 import {StoreType} from "../../../../app/store.ts";
 import {UnknownAction} from "redux";
@@ -29,10 +29,10 @@ export const Task = ({todolistId, task}: Props) => {
 
     return <li className={s.task} key={task.id}>
         <div style={{display: 'flex', gap: '20px'}}>
-            <Checkbox onChange={onChangeStatusHandler} checked={task.status === TaskStatuses.Completed}/>
-            <EditableSpan title={task.title} onChange={changeTaskTitleHandler}/>
+            <Checkbox onChange={onChangeStatusHandler} checked={task.status === TaskStatuses.Completed} disabled={task.entityStatus === 'loading'}/>
+            <EditableSpan title={task.title} onChange={changeTaskTitleHandler} disabled={task.entityStatus === 'loading'}/>
         </div>
-        <Button shape={'circle'} icon={<DeleteOutlined/>} onClick={onRemoveHandler}></Button>
+        <Button shape={'circle'} icon={<DeleteOutlined/>} onClick={onRemoveHandler} disabled={task.entityStatus === 'loading'}></Button>
 
     </li>
 
@@ -40,5 +40,5 @@ export const Task = ({todolistId, task}: Props) => {
 
 type Props = {
     todolistId: string
-    task: TaskType
+    task: TaskDomainType
 }

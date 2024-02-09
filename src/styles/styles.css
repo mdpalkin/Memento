@@ -23,3 +23,9 @@
     margin-top: 30px;
     flex-wrap: wrap;
 }
+
+.spin {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
