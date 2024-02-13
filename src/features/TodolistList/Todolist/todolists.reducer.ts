@@ -1,7 +1,8 @@
 import {todolistsApi, TodolistType} from "../../../api/todolists-api.ts";
 import {Dispatch} from "redux";
-import {RequestStatusType, setAppStatus, SetAppStatusType, setError} from "../../../app/app.reducer.ts";
+import {RequestStatusType, setAppStatus, SetAppStatusType} from "../../../app/app.reducer.ts";
 import {ResultCodes} from "../../../api/instance.ts";
+import {handleServerAppError, handleServerNetworkError} from "../../../utils/error-utils.ts";
 
 
 const initialState: TodolistDomainType[] = []
@@ -84,7 +85,9 @@ export const fetchTodolists = () => (dispatch: Dispatch<TodolistReducerActionTyp
         .then(res => {
             dispatch(setTodolists(res.data))
             dispatch(setAppStatus('succeeded'))
-        })
+        }).catch(e => {
+        handleServerNetworkError(e, dispatch)
+    })
 }
 
 export const removeTodolistTC = (todolistId: string) => (dispatch: Dispatch) => {
@@ -95,13 +98,10 @@ export const removeTodolistTC = (todolistId: string) => (dispatch: Dispatch) => 
             dispatch(removeTodolist(todolistId))
             dispatch(setAppStatus('succeeded'))
         } else {
-            if (res.data.messages.length) {
-                dispatch(setError(res.data.messages[0]))
-            } else {
-                dispatch(setError('Some error occurred'))
-            }
-            dispatch(setAppStatus('failed'))
+            handleServerAppError(res.data, dispatch)
         }
+    }).catch(e => {
+        handleServerNetworkError(e, dispatch)
     })
 }
 
@@ -112,14 +112,10 @@ export const addTodolistTC = (title: string) => (dispatch: Dispatch) => {
             dispatch(addTodolist(res.data.data.item))
             dispatch(setAppStatus('succeeded'))
         } else {
-            if (res.data.messages.length) {
-                dispatch(setError(res.data.messages[0]))
-            } else {
-                dispatch(setError('Some error occurred'))
-            }
-            dispatch(setAppStatus('failed'))
+            handleServerAppError(res.data, dispatch)
         }
-
+    }).catch(e => {
+        handleServerNetworkError(e, dispatch)
     })
 }
 
@@ -130,13 +126,10 @@ export const changeTodolistTitleTC = (todolistId: string, title: string) => (dis
             dispatch(changeTodolistTitle(todolistId, title))
             dispatch(setAppStatus('succeeded'))
         } else {
-            if (res.data.messages.length) {
-                dispatch(setError(res.data.messages[0]))
-            } else {
-                dispatch(setError('Some error occurred'))
-            }
-            dispatch(setAppStatus('failed'))
+            handleServerAppError(res.data, dispatch)
         }
+    }).catch(e => {
+        handleServerNetworkError(e, dispatch)
     })
 }
 

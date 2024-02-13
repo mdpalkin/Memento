@@ -2,8 +2,9 @@ import {AddTodolistType, RemoveTodolistType, SetTodolists} from "../todolists.re
 import {TaskDomainType, tasksApi, TaskType, UpdateDomainTaskModelType} from "../../../../api/tasks-api.ts";
 import {Dispatch} from "redux";
 import {AppRootState} from "../../../../app/store.ts";
-import {RequestStatusType, setAppStatus, SetAppStatusType, setError} from "../../../../app/app.reducer.ts";
+import {RequestStatusType, setAppStatus, SetAppStatusType} from "../../../../app/app.reducer.ts";
 import {ResultCodes} from "../../../../api/instance.ts";
+import {handleServerAppError, handleServerNetworkError} from "../../../../utils/error-utils.ts";
 
 const initialState: TasksStateType = {}
 
@@ -104,6 +105,8 @@ export const fetchTasks = (todolistId: string) => (dispatch: Dispatch<TaskReduce
     tasksApi.getTasks(todolistId).then(res => {
         dispatch(setTasks(todolistId, res.data.items))
         dispatch(setAppStatus('succeeded'))
+    }).catch(e => {
+        handleServerNetworkError(e, dispatch)
     })
 }
 
@@ -115,14 +118,10 @@ export const removeTaskTC = (todolistId: string, taskId: string) => (dispatch: D
             dispatch(removeTask(todolistId, taskId))
             dispatch(setAppStatus('succeeded'))
         } else {
-            if (res.data.messages.length) {
-                dispatch(setError(res.data.messages[0]))
-            } else {
-                dispatch(setError('Some error occurred'))
-            }
-            dispatch(setAppStatus('failed'))
-            dispatch(changeTaskEntityStatus(todolistId, taskId, 'idle'))
+           handleServerAppError(res.data, dispatch)
         }
+    }).catch(e => {
+        handleServerNetworkError(e, dispatch)
     })
 }
 
@@ -133,17 +132,11 @@ export const addTaskTC = (todolistId: string, title: string) => (dispatch: Dispa
             dispatch(addTask(res.data.data.item))
             dispatch(setAppStatus('succeeded'))
         } else {
-            if (res.data.messages.length) {
-                dispatch(setError(res.data.messages[0]))
-            } else {
-                dispatch(setError('Some error occurred'))
-            }
-            dispatch(setAppStatus('failed'))
+            handleServerAppError(res.data, dispatch)
         }
 
-    }).catch((error) => {
-        dispatch(setError(error.message))
-        dispatch(setAppStatus('failed'))
+    }).catch(e => {
+        handleServerNetworkError(e, dispatch)
     })
 }
 
@@ -165,17 +158,14 @@ export const updateTaskTC = (todolistId: string, taskId: string, changes: Partia
         }
 
         tasksApi.updateTask(todolistId, taskId, apiModel).then(res => {
-            if (res.data.resultCode === ResultCodes.OK) {
+            if (res.data.resultCode === ResultCodes.OK ) {
                 dispatch(updateTask(res.data.data.item))
                 dispatch(setAppStatus('succeeded'))
             } else {
-                if (res.data.messages.length) {
-                    dispatch(setError(res.data.messages[0]))
-                } else {
-                    dispatch(setError('Some error occurred'))
-                }
-                dispatch(setAppStatus('failed'))
+               handleServerAppError(res.data, dispatch)
             }
+        }).catch(e => {
+            handleServerNetworkError(e, dispatch)
         })
     }
 

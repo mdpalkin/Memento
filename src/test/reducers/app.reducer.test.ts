@@ -1,4 +1,4 @@
-import {AppInitialStateType, appReducer, setError, setAppStatus} from "../../app/app.reducer.ts";
+import {AppInitialStateType, appReducer, setAppError, setAppStatus} from "../../app/app.reducer.ts";
 
 let startState: AppInitialStateType;
 
@@ -11,7 +11,7 @@ beforeEach(() => {
 describe('Common application work', () => {
 
     test('Error should be change', () => {
-        const endState = appReducer(startState, setError('Some error'))
+        const endState = appReducer(startState, setAppError('Some error'))
 
         expect(endState.error).toBe('Some error')
         expect(endState.status).toBe('idle')
