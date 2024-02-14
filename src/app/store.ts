@@ -4,12 +4,14 @@ import {tasksReducer} from "../features/TodolistList/Todolist/Task/tasks.reducer
 import {todolistsReducer} from "../features/TodolistList/Todolist/todolists.reducer.ts";
 import {appReducer} from "./app.reducer.ts";
 import {composeWithDevTools} from "redux-devtools-extension";
+import {authReducer} from "../pages/Login/auth.reducer.ts";
 
 
 const rootReducer: any = combineReducers({
     tasks: tasksReducer,
     todolists: todolistsReducer,
-    app: appReducer
+    app: appReducer,
+    auth: authReducer
 });
 
 export const store = legacy_createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
