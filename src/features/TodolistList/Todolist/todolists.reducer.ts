@@ -1,8 +1,11 @@
 import {todolistsApi, TodolistType} from "../../../api/todolists-api.ts";
-import {Dispatch} from "redux";
-import {RequestStatusType, setAppStatus, SetAppStatusType} from "../../../app/app.reducer.ts";
+import {Dispatch, UnknownAction} from "redux";
+import {RequestStatusType, setAppError, setAppStatus} from "../../../app/app.reducer.ts";
 import {ResultCodes} from "../../../api/instance.ts";
 import {handleServerAppError, handleServerNetworkError} from "../../../utils/error-utils.ts";
+import {fetchTasks} from "./Task/tasks.reducer.ts";
+import {ThunkDispatch} from "redux-thunk";
+import {StoreType} from "../../../app/store.ts";
 
 
 const initialState: TodolistDomainType[] = []
@@ -29,6 +32,8 @@ export const todolistsReducer = (state: TodolistDomainType[] = initialState, act
         case "CHANGE-TODOLIST-ENTITY-STATUS":
             return state.map(todolist =>
                 action.todolistId === todolist.id ? {...todolist, entityStatus: action.status} : todolist)
+        case "CLEAR-STATE":
+            return []
         default:
             return state
 
@@ -76,16 +81,29 @@ export const changeEntityStatus = (todolistId: string, status: RequestStatusType
     status, todolistId
 } as const)
 
+export type ClearStateType = ReturnType<typeof clearState>
+export const clearState = () => ({
+    type: 'CLEAR-STATE'
+} as const)
+
 
 // THUNKS
 
-export const fetchTodolists = () => (dispatch: Dispatch<TodolistReducerActionType | SetAppStatusType>) => {
+export const fetchTodolists = () => (dispatch: ThunkDispatch<StoreType, never, UnknownAction>) => {
     dispatch(setAppStatus('loading'))
     todolistsApi.getTodolists()
         .then(res => {
             dispatch(setTodolists(res.data))
             dispatch(setAppStatus('succeeded'))
-        }).catch(e => {
+            dispatch(setAppError(null))
+            return res.data
+        })
+        .then(todolists => {
+            todolists.forEach( (todolist) =>
+                dispatch(fetchTasks(todolist.id))
+            )
+        })
+        .catch(e => {
         handleServerNetworkError(e, dispatch)
     })
 }
@@ -97,6 +115,7 @@ export const removeTodolistTC = (todolistId: string) => (dispatch: Dispatch) => 
         if (res.data.resultCode === ResultCodes.OK) {
             dispatch(removeTodolist(todolistId))
             dispatch(setAppStatus('succeeded'))
+            dispatch(setAppError(null))
         } else {
             handleServerAppError(res.data, dispatch)
         }
@@ -111,6 +130,7 @@ export const addTodolistTC = (title: string) => (dispatch: Dispatch) => {
         if (res.data.resultCode === ResultCodes.OK) {
             dispatch(addTodolist(res.data.data.item))
             dispatch(setAppStatus('succeeded'))
+            dispatch(setAppError(null))
         } else {
             handleServerAppError(res.data, dispatch)
         }
@@ -125,6 +145,7 @@ export const changeTodolistTitleTC = (todolistId: string, title: string) => (dis
         if (res.data.resultCode === ResultCodes.OK) {
             dispatch(changeTodolistTitle(todolistId, title))
             dispatch(setAppStatus('succeeded'))
+            dispatch(setAppError(null))
         } else {
             handleServerAppError(res.data, dispatch)
         }
@@ -146,3 +167,4 @@ export type TodolistReducerActionType =
     | ChangeTodolistFilterType
     | SetTodolists
     | ChangeTodolistEntityStatusType
+    | ClearStateType

@@ -9,7 +9,7 @@ export const loginApi = {
         return instance.delete('/auth/login')
     },
     authMe() {
-        instance.get('/auth/me')
+        return instance.get('/auth/me')
     }
 }
 

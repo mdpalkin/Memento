@@ -1,8 +1,8 @@
-import {AddTodolistType, RemoveTodolistType, SetTodolists} from "../todolists.reducer.ts";
+import {AddTodolistType, ClearStateType, RemoveTodolistType, SetTodolists} from "../todolists.reducer.ts";
 import {TaskDomainType, tasksApi, TaskType, UpdateDomainTaskModelType} from "../../../../api/tasks-api.ts";
 import {Dispatch} from "redux";
 import {AppRootState} from "../../../../app/store.ts";
-import {RequestStatusType, setAppStatus, SetAppStatusType} from "../../../../app/app.reducer.ts";
+import {RequestStatusType, setAppError, setAppStatus} from "../../../../app/app.reducer.ts";
 import {ResultCodes} from "../../../../api/instance.ts";
 import {handleServerAppError, handleServerNetworkError} from "../../../../utils/error-utils.ts";
 
@@ -62,6 +62,8 @@ export const tasksReducer = (state: TasksStateType = initialState, action: TaskR
                 )
             }
         }
+        case "CLEAR-STATE":
+            return {}
         default:
             return state
     }
@@ -100,11 +102,12 @@ export const changeTaskEntityStatus = (todolistId: string, taskId: string, newSt
 
 // THUNKS
 
-export const fetchTasks = (todolistId: string) => (dispatch: Dispatch<TaskReducerActionType | SetAppStatusType>) => {
+export const fetchTasks = (todolistId: string) => (dispatch: Dispatch) => {
     dispatch(setAppStatus('loading'))
     tasksApi.getTasks(todolistId).then(res => {
         dispatch(setTasks(todolistId, res.data.items))
         dispatch(setAppStatus('succeeded'))
+        dispatch(setAppError(null))
     }).catch(e => {
         handleServerNetworkError(e, dispatch)
     })
@@ -117,6 +120,7 @@ export const removeTaskTC = (todolistId: string, taskId: string) => (dispatch: D
         if (res.data.resultCode === ResultCodes.OK) {
             dispatch(removeTask(todolistId, taskId))
             dispatch(setAppStatus('succeeded'))
+            dispatch(setAppError(null))
         } else {
            handleServerAppError(res.data, dispatch)
         }
@@ -131,6 +135,7 @@ export const addTaskTC = (todolistId: string, title: string) => (dispatch: Dispa
         if (res.data.resultCode === ResultCodes.OK) {
             dispatch(addTask(res.data.data.item))
             dispatch(setAppStatus('succeeded'))
+            dispatch(setAppError(null))
         } else {
             handleServerAppError(res.data, dispatch)
         }
@@ -161,6 +166,7 @@ export const updateTaskTC = (todolistId: string, taskId: string, changes: Partia
             if (res.data.resultCode === ResultCodes.OK ) {
                 dispatch(updateTask(res.data.data.item))
                 dispatch(setAppStatus('succeeded'))
+                dispatch(setAppError(null))
             } else {
                handleServerAppError(res.data, dispatch)
             }
@@ -180,6 +186,7 @@ export type TaskReducerActionType =
     | SetTasksType
     | UpdateTaskType
     | ChangeTaskEntityStatus
+    | ClearStateType
 
 export type TasksStateType = {
     [key: string]: TaskDomainType[]

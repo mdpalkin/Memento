@@ -6,25 +6,19 @@ import {DeleteOutlined} from "@ant-design/icons";
 import s from './Todolist.module.css'
 import Radio from "antd/lib/radio/index";
 import Card from "antd/lib/card/Card";
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootState, StoreType} from "../../../app/store.ts";
-import {addTaskTC, fetchTasks} from "./Task/tasks.reducer.ts";
+import {useSelector} from "react-redux";
+import {AppRootState, useAppDispatch} from "../../../app/store.ts";
+import {addTaskTC} from "./Task/tasks.reducer.ts";
 import {changeTodolistFilter, changeTodolistTitleTC, FilterValues, removeTodolistTC} from "./todolists.reducer.ts";
-import {memo, useCallback, useEffect, useMemo} from "react";
+import {memo, useCallback, useMemo} from "react";
 import {Task} from "./Task/Task.tsx";
 import {TaskDomainType, TaskStatuses, TaskType} from "../../../api/tasks-api.ts";
-import {ThunkDispatch} from "redux-thunk";
-import {UnknownAction} from "redux";
 import {RequestStatusType} from "../../../app/app.reducer.ts";
 
 export const Todolist = memo(({title, todolistId, filter, entityStatus}: Props) => {
 
     const tasks = useSelector((state: AppRootState) => state.tasks[todolistId])
-    const dispatch: ThunkDispatch<StoreType, never, UnknownAction> = useDispatch()
-
-    useEffect(() => {
-        dispatch(fetchTasks(todolistId))
-    }, []);
+    const dispatch = useAppDispatch()
 
     const addTaskHandler = useCallback((title: string) => {
         dispatch(addTaskTC(todolistId, title))

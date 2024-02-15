@@ -4,21 +4,19 @@ import Input from "antd/lib/input/Input";
 import Checkbox from "antd/lib/checkbox/Checkbox";
 import s from './Login.module.css'
 import {Formik} from "formik";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {loginTC} from "./auth.reducer.ts";
-import {ThunkDispatch} from "redux-thunk";
-import {AppRootState, StoreType} from "../../app/store.ts";
-import {UnknownAction} from "redux";
-import { redirect } from "react-router-dom";
+import {AppRootState, useAppDispatch} from "../../app/store.ts";
+import {Navigate} from "react-router-dom";
 
 export const Login = () => {
 
     const isLoggedIn = useSelector<AppRootState>(state => state.auth.isLoggedIn)
 
-    const dispatch = useDispatch<ThunkDispatch<StoreType, never, UnknownAction>>()
+    const dispatch = useAppDispatch()
 
     if (isLoggedIn) {
-        redirect("/todolists")
+        return <Navigate to={'/todolists'}/>
     }
 
     return (

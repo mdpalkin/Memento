@@ -1,11 +1,10 @@
 import {notification} from "antd";
-import {useSelector} from "react-redux";
-import {AppRootState} from "../../app/store.ts";
+import {memo} from "react";
 
-export const ErrorSnackbar = () => {
+export const ErrorSnackbar = memo(({error}: Props) => {
     const [api, contextHolder] = notification.useNotification();
 
-    const error = useSelector<AppRootState, string | null>((state) => state.app.error)
+    // const error = useSelector<AppRootState, string | null>((state) => state.app.error)
 
     const openNotificationWithIcon = (error: string) => {
         api['error']({
@@ -20,4 +19,8 @@ export const ErrorSnackbar = () => {
                 {isOpen && openNotificationWithIcon(error)}
         </>
     );
-};
+});
+
+type Props = {
+    error: string | null
+}

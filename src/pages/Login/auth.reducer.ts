@@ -2,7 +2,8 @@ import {loginApi, LoginParamsType} from "../../api/login-api.ts";
 import {Dispatch} from "redux";
 import {ResultCodes} from "../../api/instance.ts";
 import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils.ts";
-import {setAppStatus} from "../../app/app.reducer.ts";
+import {setAppError, setAppStatus} from "../../app/app.reducer.ts";
+import {clearState} from "../../features/TodolistList/Todolist/todolists.reducer.ts";
 
 
 const initialState = {
@@ -30,12 +31,26 @@ export const loginTC = (data: LoginParamsType) => (dispatch: Dispatch) => {
     dispatch(setAppStatus('loading'))
     loginApi.login(data).then(res => {
         if (res.data.resultCode === ResultCodes.OK) {
+            dispatch(setAppError(null))
             dispatch(setIsLoggedIn(true))
             dispatch(setAppStatus('succeeded'))
         } else {
             handleServerAppError(res.data, dispatch)
         }
     }).catch(e => {
+        handleServerNetworkError(e, dispatch)
+    })
+}
+
+export const logoutTC = () => (dispatch: Dispatch) => {
+    loginApi.logout().then(res => {
+        if (res.data.resultCode === ResultCodes.OK) {
+            dispatch(setIsLoggedIn(false))
+            dispatch(clearState())
+        } else {
+            handleServerAppError(res.data, dispatch)
+        }
+    }).catch((e) => {
         handleServerNetworkError(e, dispatch)
     })
 }

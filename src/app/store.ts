@@ -1,10 +1,11 @@
-import {applyMiddleware, combineReducers, legacy_createStore} from "redux";
-import {thunk} from "redux-thunk";
+import {applyMiddleware, combineReducers, legacy_createStore, UnknownAction} from "redux";
+import {thunk, ThunkDispatch} from "redux-thunk";
 import {tasksReducer} from "../features/TodolistList/Todolist/Task/tasks.reducer.ts";
 import {todolistsReducer} from "../features/TodolistList/Todolist/todolists.reducer.ts";
 import {appReducer} from "./app.reducer.ts";
 import {composeWithDevTools} from "redux-devtools-extension";
 import {authReducer} from "../pages/Login/auth.reducer.ts";
+import {useDispatch} from "react-redux";
 
 
 const rootReducer: any = combineReducers({
@@ -20,5 +21,4 @@ export type AppRootState = ReturnType<typeof rootReducer>;
 
 export type StoreType = typeof store;
 
-// @ts-expect-error ???
-window.store = store.getState()
+export const useAppDispatch = () => useDispatch<ThunkDispatch<StoreType, never, UnknownAction>>()
