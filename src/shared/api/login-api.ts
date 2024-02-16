@@ -9,7 +9,7 @@ export const loginApi = {
         return instance.delete('/auth/login')
     },
     authMe() {
-        return instance.get('/auth/me')
+        return instance.get<ResponseType<UserType>>('/auth/me')
     }
 }
 
@@ -22,4 +22,10 @@ export type LoginParamsType =  {
     password: string,
     rememberMe: boolean,
     captcha?: string
+}
+
+export type UserType = {
+    id: string,
+    email: string,
+    login: string
 }

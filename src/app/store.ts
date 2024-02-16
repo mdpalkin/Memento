@@ -1,21 +1,23 @@
-import {applyMiddleware, combineReducers, legacy_createStore, UnknownAction} from "redux";
-import {thunk, ThunkDispatch} from "redux-thunk";
+import {combineReducers, UnknownAction} from "redux";
+import {ThunkDispatch} from "redux-thunk";
 import {tasksReducer} from "../features/TodolistList/Todolist/Task/tasks.reducer.ts";
 import {todolistsReducer} from "../features/TodolistList/Todolist/todolists.reducer.ts";
 import {appReducer} from "./app.reducer.ts";
-import {composeWithDevTools} from "redux-devtools-extension";
 import {authReducer} from "../pages/Login/auth.reducer.ts";
 import {useDispatch} from "react-redux";
+import {configureStore} from "@reduxjs/toolkit";
 
 
-const rootReducer: any = combineReducers({
+const rootReducer = combineReducers({
     tasks: tasksReducer,
     todolists: todolistsReducer,
     app: appReducer,
     auth: authReducer
 });
 
-export const store = legacy_createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
+export const store = configureStore({
+    reducer: rootReducer,
+})
 
 export type AppRootState = ReturnType<typeof rootReducer>;
 

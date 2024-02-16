@@ -5,12 +5,14 @@ import {EditableSpan} from "../../../../components/EditableSpan/EditableSpan.tsx
 import {Button} from "antd";
 import {DeleteOutlined} from "@ant-design/icons";
 import {useCallback} from "react";
-import {TaskDomainType, TaskStatuses} from "../../../../api/tasks-api.ts";
-import {useAppDispatch} from "../../../../app/store.ts";
+import {TaskDomainType, TaskStatuses} from "../../../../shared/api/tasks-api.ts";
+import {useDispatch} from "react-redux";
+import {ThunkDispatch} from "redux-thunk";
+import {StoreType} from "../../../../app/store.ts";
 
 export const Task = ({todolistId, task}: Props) => {
 
-    const dispatch = useAppDispatch()
+    const dispatch = useDispatch<ThunkDispatch<StoreType, never, any>>()
     const onRemoveHandler =  useCallback(() => {
         dispatch(removeTaskTC(todolistId, task.id))
     }, [todolistId, task, dispatch])

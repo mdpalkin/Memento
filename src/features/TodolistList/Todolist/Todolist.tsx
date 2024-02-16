@@ -12,8 +12,8 @@ import {addTaskTC} from "./Task/tasks.reducer.ts";
 import {changeTodolistFilter, changeTodolistTitleTC, FilterValues, removeTodolistTC} from "./todolists.reducer.ts";
 import {memo, useCallback, useMemo} from "react";
 import {Task} from "./Task/Task.tsx";
-import {TaskDomainType, TaskStatuses, TaskType} from "../../../api/tasks-api.ts";
 import {RequestStatusType} from "../../../app/app.reducer.ts";
+import {TaskDomainType, TaskStatuses, TaskType} from "../../../shared/api/tasks-api.ts";
 
 export const Todolist = memo(({title, todolistId, filter, entityStatus}: Props) => {
 
@@ -24,9 +24,9 @@ export const Todolist = memo(({title, todolistId, filter, entityStatus}: Props) 
         dispatch(addTaskTC(todolistId, title))
     }, [todolistId, dispatch])
 
-    const onAllClickHandler = useCallback(() =>dispatch(changeTodolistFilter(todolistId, 'all')), [todolistId, dispatch])
-    const onActiveClickHandler = useCallback(() => dispatch(changeTodolistFilter(todolistId, 'active')), [todolistId, dispatch])
-    const onCompletedClickHandler = useCallback(() => dispatch(changeTodolistFilter(todolistId, 'completed')), [todolistId, dispatch])
+    const onAllClickHandler = useCallback(() =>dispatch(changeTodolistFilter({todolistId, filter: 'all'})), [todolistId, dispatch])
+    const onActiveClickHandler = useCallback(() => dispatch(changeTodolistFilter({todolistId, filter: 'active'})), [todolistId, dispatch])
+    const onCompletedClickHandler = useCallback(() => dispatch(changeTodolistFilter({todolistId, filter: 'completed'})), [todolistId, dispatch])
 
     const removeTodolistHandler = useCallback(() => {
         dispatch(removeTodolistTC(todolistId))
