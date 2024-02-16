@@ -14,16 +14,16 @@ export const Task = ({todolistId, task}: Props) => {
 
     const dispatch = useDispatch<ThunkDispatch<StoreType, never, any>>()
     const onRemoveHandler =  useCallback(() => {
-        dispatch(removeTaskTC(todolistId, task.id))
+        dispatch(removeTaskTC({todolistId, taskId: task.id}))
     }, [todolistId, task, dispatch])
 
     const onChangeStatusHandler = useCallback(() => {
         const isDone = task.status === TaskStatuses.Completed ? TaskStatuses.InProgress : TaskStatuses.Completed
-        dispatch(updateTaskTC(todolistId, task.id, {status: isDone}))
+        dispatch(updateTaskTC({todolistId, taskId: task.id, changes: {status: isDone}}))
     }, [todolistId, task, dispatch])
 
     const changeTaskTitleHandler = useCallback((newTitle: string) => {
-        dispatch(updateTaskTC(todolistId, task.id, {title: newTitle}))
+        dispatch(updateTaskTC({todolistId, taskId: task.id, changes: {title: newTitle}}))
     }, [todolistId, task, dispatch])
 
     return <li className={s.task} key={task.id}>

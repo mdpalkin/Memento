@@ -1,5 +1,4 @@
-import {combineReducers, UnknownAction} from "redux";
-import {ThunkDispatch} from "redux-thunk";
+import {combineReducers} from "redux";
 import {tasksReducer} from "../features/TodolistList/Todolist/Task/tasks.reducer.ts";
 import {todolistsReducer} from "../features/TodolistList/Todolist/todolists.reducer.ts";
 import {appReducer} from "./app.reducer.ts";
@@ -23,4 +22,6 @@ export type AppRootState = ReturnType<typeof rootReducer>;
 
 export type StoreType = typeof store;
 
-export const useAppDispatch = () => useDispatch<ThunkDispatch<StoreType, never, UnknownAction>>()
+export type DispatchType = typeof store.dispatch
+
+export const useAppDispatch = () => useDispatch<DispatchType>()

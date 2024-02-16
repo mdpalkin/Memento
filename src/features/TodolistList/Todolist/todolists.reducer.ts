@@ -97,7 +97,6 @@ export const addTodolistTC = (title: string) => (dispatch: Dispatch) => {
     dispatch(setAppStatus({status: 'loading'}))
     todolistsApi.createTodolist(title).then(res => {
         if (res.data.resultCode === ResultCodes.OK) {
-            debugger
             dispatch(addTodolist({todolist: res.data.data.item}))
             dispatch(setAppStatus({status: 'succeeded'}))
             dispatch(setAppError({error: null}))

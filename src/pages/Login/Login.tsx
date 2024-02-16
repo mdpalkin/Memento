@@ -22,8 +22,15 @@ export const Login = () => {
     return (
         <Formik
             initialValues={{email: '', password: '', rememberMe: false}}
-            onSubmit={values => {
-                dispatch(loginTC(values))
+            onSubmit={async (values, formikHelpers) => {
+                const action = await dispatch(loginTC(values))
+
+                if (loginTC.rejected.match(action)) {
+                    if (action.payload?.fieldsErrors?.length) {
+                        const error = action.payload?.fieldsErrors[0]
+                        formikHelpers.setFieldError(error?.field, error?.error)
+                    }
+                }
             }}
         >
             {({
@@ -37,7 +44,7 @@ export const Login = () => {
                 <form onSubmit={handleSubmit}  className={s.wrapper}>
                     <Typography.Title level={3}>Login In</Typography.Title>
                     <Input
-                        prefix={<UserOutlined className="site-form-item-icon"/>}
+                        prefix={<UserOutlined/>}
                         placeholder="Username"
                         name={'email'}
                         value={values.email}
@@ -48,7 +55,7 @@ export const Login = () => {
                         <div className={s.errorMessage}>{errors.email}</div>}
 
                     <Input
-                        prefix={<LockOutlined className="site-form-item-icon"/>}
+                        prefix={<LockOutlined/>}
                         type="password"
                         placeholder="Password"
                         name={'password'}
@@ -63,7 +70,7 @@ export const Login = () => {
                         checked={values.rememberMe}
                         onChange={handleChange}
                     >Remember me</Checkbox>
-                    <Button htmlType={'submit'} typeof={'primary'} type="primary" disabled={!!errors.password || !!errors.email}>
+                    <Button htmlType={'submit'} type="primary" disabled={!!errors.password || !!errors.email}>
                         Log in
                     </Button>
                 </form>

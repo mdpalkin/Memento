@@ -21,7 +21,7 @@ export const Todolist = memo(({title, todolistId, filter, entityStatus}: Props) 
     const dispatch = useAppDispatch()
 
     const addTaskHandler = useCallback((title: string) => {
-        dispatch(addTaskTC(todolistId, title))
+        dispatch(addTaskTC({todolistId, title}))
     }, [todolistId, dispatch])
 
     const onAllClickHandler = useCallback(() =>dispatch(changeTodolistFilter({todolistId, filter: 'all'})), [todolistId, dispatch])
