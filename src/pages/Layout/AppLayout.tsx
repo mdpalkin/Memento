@@ -19,7 +19,7 @@ export const AppLayout = () => {
 
     const dispatch = useAppDispatch()
 
-    useEffect(() => {
+    useEffect( () => {
         dispatch(initializeAppTC())
         navigate('/login')
     }, []);

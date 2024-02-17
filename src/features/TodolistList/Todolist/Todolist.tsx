@@ -29,11 +29,11 @@ export const Todolist = memo(({title, todolistId, filter, entityStatus}: Props) 
     const onCompletedClickHandler = useCallback(() => dispatch(changeTodolistFilter({todolistId, filter: 'completed'})), [todolistId, dispatch])
 
     const removeTodolistHandler = useCallback(() => {
-        dispatch(removeTodolistTC(todolistId))
+        dispatch(removeTodolistTC({todolistId}))
     }, [todolistId, dispatch])
 
     const changeTodolistTitleHandler = useCallback((newTitle: string) => {
-        dispatch(changeTodolistTitleTC(todolistId, newTitle))
+        dispatch(changeTodolistTitleTC({todolistId, title: newTitle}))
     }, [todolistId, dispatch])
 
 

@@ -13,7 +13,7 @@ export const TodolistsPage = () => {
     const isLoggedIn = useSelector<AppRootState>(state => state.auth.isLoggedIn)
 
     const addTodolistHandler = useCallback((title: string) => {
-        dispatch(addTodolistTC(title))
+        dispatch(addTodolistTC({title}))
     }, [dispatch])
 
     if (!isLoggedIn) {
