@@ -19,7 +19,7 @@ export const loginTC = createAsyncThunk<undefined, LoginParamsType, {
             dispatch(setAppError({error: null}))
         } else {
             handleServerAppError(res.data, dispatch)
-            return rejectWithValue({errors: res.data.messages, fieldsErrors: res.data.fieldsError})
+            return rejectWithValue({errors: res.data.messages, fieldsErrors: res.data.fieldsErrors})
         }
     } catch (err) {
 

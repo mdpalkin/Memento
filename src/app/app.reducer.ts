@@ -22,7 +22,6 @@ export const initializeAppTC = createAsyncThunk('auth/initializeApp', async (_ar
             dispatch(setIsLoggedIn({isLoggedIn: true}))
         } else {
             handleServerAppError(res.data, dispatch)
-            return rejectWithValue(null)
         }
     } catch (err) {
 

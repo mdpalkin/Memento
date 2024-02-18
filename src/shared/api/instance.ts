@@ -13,7 +13,7 @@ export type FieldErrorType =  {
 export type ResponseType<D> = {
     resultCode: number
     messages: string[]
-    fieldsError?: FieldErrorType[]
+    fieldsErrors?: FieldErrorType[]
     data: D
 }
 

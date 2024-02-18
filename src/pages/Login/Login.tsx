@@ -25,7 +25,6 @@ export const Login = () => {
             initialValues={{email: '', password: '', rememberMe: false}}
             onSubmit={async (values, formikHelpers) => {
                 const action = await dispatch(loginTC(values))
-
                 if (loginTC.rejected.match(action)) {
                     if (action.payload?.fieldsErrors?.length) {
                         const error = action.payload?.fieldsErrors[0]

@@ -1,7 +1,11 @@
-import {addTodolist, removeTodolist, TodolistDomainType, todolistsReducer} from "../../features/TodolistList/Todolist/todolists.reducer.ts";
+import {
+    addTodolistTC, clearState, removeTodolistTC,
+    TodolistDomainType,
+    todolistsReducer
+} from "../../features/TodolistList/Todolist/todolists.reducer.ts";
 import {v1} from "uuid";
 import {tasksReducer, TasksStateType} from "../../features/TodolistList/Todolist/Task/tasks.reducer.ts";
-import {TodolistType} from "../../api/todolists-api.ts";
+import {TodolistType} from "../../shared/api/todolists-api.ts";
 
 test('ids should be equals', () => {
     const startTodolistsState: TodolistDomainType[] = []
@@ -16,7 +20,7 @@ test('ids should be equals', () => {
         status: 'idle'
     }
 
-    const action = addTodolist(newTodolist)
+    const action = addTodolistTC.fulfilled({todolist: newTodolist}, 'requestId', newTodolist)
     const endTasksState: TasksStateType = tasksReducer(startTasksState, action)
     const endTodolistState: TodolistType[] = todolistsReducer(startTodolistsState, action)
 
@@ -35,11 +39,23 @@ test('task for deleted todolist should be deleted', () => {
         ['todolistId1']: []
     }
 
-    const endState = tasksReducer(startState, removeTodolist('todolistId1'))
+    const endState = tasksReducer(startState, removeTodolistTC.fulfilled({todolistId: 'todolistId1'}, 'requestId', {todolistId: 'todolistId1'}))
 
     const keys = Object.keys(endState)
 
     expect(keys.length).toBe(0)
     expect(endState['todolistId1']).toBeUndefined()
+})
 
+test('state should be cleared', () => {
+
+
+    const startState: TasksStateType = {
+        ['todolistId1']: []
+    }
+
+    const endState = tasksReducer(startState, clearState())
+
+
+    expect(endState).toEqual({})
 })
