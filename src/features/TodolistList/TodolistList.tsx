@@ -1,7 +1,7 @@
 import {fetchTodolists, TodolistDomainType} from "./Todolist/todolists.reducer.ts";
 import {Todolist} from "./Todolist/Todolist.tsx";
 import {useSelector} from "react-redux";
-import {useAppDispatch} from "../../app/store.ts";
+import {useAppDispatch} from "../../app";
 import {useEffect} from "react";
 
 

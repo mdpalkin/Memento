@@ -1,13 +1,13 @@
 import {Spin} from "antd";
 import Layout from "antd/lib/layout/layout";
 import {useSelector} from "react-redux";
-import {useAppDispatch} from "../../app/store.ts";
-import {AppHeader} from "../../features/AppHeader/AppHeader.tsx";
+import {useAppDispatch} from "../../app";
+import {AppHeader} from "../../features/AppHeader";
 import {Outlet, useNavigate} from 'react-router-dom'
-import {ErrorSnackbar} from "../../features/ErrorSnackbar/ErrorSnackbar.tsx";
+import {ErrorSnackbar} from "../../features/ErrorSnackbar";
 import {useEffect} from "react";
-import {initializeAppTC} from "../../app/app.reducer.ts";
-import {selectAppError, selectIsInitialized, selectStatus} from "../../app/app.selectors.ts";
+import {initializeAppTC} from "../../app";
+import {selectAppError, selectIsInitialized, selectStatus} from "../../app";
 
 
 export const AppLayout = () => {

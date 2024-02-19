@@ -1,18 +1,16 @@
 import {removeTaskTC, updateTaskTC} from "./tasks.reducer.ts";
 import s from "../Todolist.module.css";
 import Checkbox from "antd/lib/checkbox/Checkbox";
-import {EditableSpan} from "../../../EditableSpan/EditableSpan.tsx";
+import {EditableSpan} from "../../../EditableSpan";
 import {Button} from "antd";
 import {DeleteOutlined} from "@ant-design/icons";
 import {useCallback} from "react";
-import {TaskDomainType, TaskStatuses} from "../../../../shared/api/tasks-api.ts";
-import {useDispatch} from "react-redux";
-import {ThunkDispatch} from "redux-thunk";
-import {StoreType} from "../../../../app/store.ts";
+import {TaskDomainType, TaskStatuses} from "../../../../shared/api";
+import {useAppDispatch} from "../../../../app";
 
 export const Task = ({todolistId, task}: Props) => {
 
-    const dispatch = useDispatch<ThunkDispatch<StoreType, never, any>>()
+    const dispatch = useAppDispatch()
     const onRemoveHandler =  useCallback(() => {
         dispatch(removeTaskTC({todolistId, taskId: task.id}))
     }, [todolistId, task, dispatch])
