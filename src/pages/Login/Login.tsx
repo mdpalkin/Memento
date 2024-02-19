@@ -6,12 +6,13 @@ import s from './Login.module.css'
 import {Formik} from "formik";
 import {useSelector} from "react-redux";
 import {loginTC} from "./auth.reducer.ts";
-import {AppRootState, useAppDispatch} from "../../app/store.ts";
+import {useAppDispatch} from "../../app/store.ts";
 import {Navigate} from "react-router-dom";
+import {selectIsLoggedIn} from "./auth.selectors.ts";
 
 export const Login = () => {
 
-    const isLoggedIn = useSelector<AppRootState>(state => state.auth.isLoggedIn)
+    const isLoggedIn = useSelector(selectIsLoggedIn)
 
     const dispatch = useAppDispatch()
 

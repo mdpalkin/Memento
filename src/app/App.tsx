@@ -1,5 +1,5 @@
 import '../styles/styles.css'
-import {Router} from "./router/router.tsx";
+import {Router} from "./router";
 
 export const App = () => {
 

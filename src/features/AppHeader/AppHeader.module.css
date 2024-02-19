@@ -1,0 +1,6 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    min-height: 7vh;
+    justify-content: space-between;
+}

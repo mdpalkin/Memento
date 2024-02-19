@@ -1,7 +1,7 @@
 import {removeTaskTC, updateTaskTC} from "./tasks.reducer.ts";
 import s from "../Todolist.module.css";
 import Checkbox from "antd/lib/checkbox/Checkbox";
-import {EditableSpan} from "../../../../components/EditableSpan/EditableSpan.tsx";
+import {EditableSpan} from "../../../EditableSpan/EditableSpan.tsx";
 import {Button} from "antd";
 import {DeleteOutlined} from "@ant-design/icons";
 import {useCallback} from "react";

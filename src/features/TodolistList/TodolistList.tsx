@@ -1,8 +1,11 @@
 import {fetchTodolists, TodolistDomainType} from "./Todolist/todolists.reducer.ts";
 import {Todolist} from "./Todolist/Todolist.tsx";
 import {useSelector} from "react-redux";
-import {AppRootState, useAppDispatch} from "../../app/store.ts";
+import {useAppDispatch} from "../../app/store.ts";
 import {useEffect} from "react";
+
+
+import {selectTodolists} from "./Todolist/todolists.selectors.ts";
 
 export const TodolistList = () => {
 
@@ -12,7 +15,7 @@ export const TodolistList = () => {
         dispatch(fetchTodolists())
     }, []);
 
-    const todolists = useSelector((state: AppRootState) => state.todolists)
+    const todolists = useSelector(selectTodolists)
 
     return <div className={'todolists'}>
         {todolists.map((todolist: TodolistDomainType) => {

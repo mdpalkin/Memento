@@ -4,8 +4,6 @@ import {memo} from "react";
 export const ErrorSnackbar = memo(({error}: Props) => {
     const [api, contextHolder] = notification.useNotification();
 
-    // const error = useSelector<AppRootState, string | null>((state) => state.app.error)
-
     const openNotificationWithIcon = (error: string) => {
         api['error']({
             message: 'An error has been detected',

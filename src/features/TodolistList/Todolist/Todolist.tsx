@@ -1,13 +1,13 @@
 import '../../../styles/styles.css'
-import {AddItemForm} from "../../../components/AddItemForm/AddItemForm.tsx";
-import {EditableSpan} from "../../../components/EditableSpan/EditableSpan.tsx";
+import {AddItemForm} from "../../AddItemForm/AddItemForm.tsx";
+import {EditableSpan} from "../../EditableSpan/EditableSpan.tsx";
 import {Button} from "antd"
 import {DeleteOutlined} from "@ant-design/icons";
 import s from './Todolist.module.css'
 import Radio from "antd/lib/radio/index";
 import Card from "antd/lib/card/Card";
 import {useSelector} from "react-redux";
-import {AppRootState, useAppDispatch} from "../../../app/store.ts";
+import {useAppDispatch} from "../../../app/store.ts";
 import {addTaskTC} from "./Task/tasks.reducer.ts";
 import {changeTodolistFilter, changeTodolistTitleTC, FilterValues, removeTodolistTC} from "./todolists.reducer.ts";
 import {memo, useCallback, useMemo} from "react";
@@ -15,9 +15,11 @@ import {Task} from "./Task/Task.tsx";
 import {RequestStatusType} from "../../../app/app.reducer.ts";
 import {TaskDomainType, TaskStatuses, TaskType} from "../../../shared/api/tasks-api.ts";
 
+import {selectTasksById} from "./Task/tasks.selectors.ts";
+
 export const Todolist = memo(({title, todolistId, filter, entityStatus}: Props) => {
 
-    const tasks = useSelector((state: AppRootState) => state.tasks[todolistId])
+    const tasks = useSelector(selectTasksById(todolistId))
     const dispatch = useAppDispatch()
 
     const addTaskHandler = useCallback((title: string) => {
