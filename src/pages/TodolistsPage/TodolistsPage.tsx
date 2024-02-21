@@ -5,7 +5,7 @@ import {useSelector} from "react-redux";
 import {useCallback} from "react";
 import {addTodolistTC} from "../../features/TodolistList/Todolist/todolists.reducer.ts";
 import {Navigate} from "react-router-dom";
-import {selectIsLoggedIn} from "../Login/auth.selectors.ts";
+import {selectIsLoggedIn} from "../Login";
 
 export const TodolistsPage = () => {
 

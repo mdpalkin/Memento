@@ -1,5 +1,5 @@
 import {ResponseType, instance} from "./instance.ts";
-import {RequestStatusType} from "../../app/app.reducer.ts";
+import {RequestStatusType} from "../../app";
 
 export const tasksApi = {
     getTasks(todolistId: string) {
@@ -16,6 +16,9 @@ export const tasksApi = {
 
     updateTask(todolistId: string, taskId: string, model: UpdateDomainTaskModelType) {
         return instance.put<ResponseType<{ item: TaskType }>>(`/todo-lists/${todolistId}/tasks/${taskId}`, model)
+    },
+    reorderTask(todolistId: string, taskId: string, putAfterItemId: string) {
+        return instance.put<ResponseType<{}>>(`/todo-lists/${todolistId}/tasks/${taskId}/reorder`, {putAfterItemId})
     }
 }
 

@@ -13,7 +13,7 @@ export const TodolistList = () => {
 
     useEffect(() => {
         dispatch(fetchTodolists())
-    }, []);
+    }, [dispatch]);
 
     const todolists = useSelector(selectTodolists)
 

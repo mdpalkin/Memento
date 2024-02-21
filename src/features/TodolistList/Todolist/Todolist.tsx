@@ -10,7 +10,7 @@ import {useSelector} from "react-redux";
 import {useAppDispatch} from "../../../app";
 import {addTaskTC} from "./Task/tasks.reducer.ts";
 import {changeTodolistFilter, changeTodolistTitleTC, FilterValues, removeTodolistTC} from "./todolists.reducer.ts";
-import {memo, useCallback, useMemo} from "react";
+import {memo, useCallback, useMemo, useState} from "react";
 import {Task} from "./Task/Task.tsx";
 import {RequestStatusType} from "../../../app";
 import {TaskDomainType, TaskStatuses, TaskType} from "../../../shared/api";
@@ -18,6 +18,9 @@ import {TaskDomainType, TaskStatuses, TaskType} from "../../../shared/api";
 import {selectTasksById} from "./Task/tasks.selectors.ts";
 
 export const Todolist = memo(({title, todolistId, filter, entityStatus}: Props) => {
+
+
+    const [currentTask, setCurrentTask] = useState<null | TaskType>(null)
 
     const tasks = useSelector(selectTasksById(todolistId))
     const dispatch = useAppDispatch()
@@ -71,7 +74,7 @@ export const Todolist = memo(({title, todolistId, filter, entityStatus}: Props) 
                 </div>
                 <AddItemForm callback={addTaskHandler} disabled={isDisabled}/>
                 <ul>
-                    {tasksForTodolist.map(task => <Task key={task.id} task={task} todolistId={todolistId} /> )}
+                    {tasksForTodolist.map(task => <Task currentTask={currentTask} setCurrentTask={setCurrentTask} key={task.id} task={task} todolistId={todolistId} /> )}
                 </ul>
                 <div>
                     <Radio.Group value={filter}>

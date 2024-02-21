@@ -1,11 +1,11 @@
-import {RequestStatusType, setAppError, setAppStatus} from "../../../../app/app.reducer.ts";
-import {TaskDomainType, tasksApi, TaskType, UpdateDomainTaskModelType} from "../../../../shared/api/tasks-api.ts";
+import {RequestStatusType, setAppError, setAppStatus} from "../../../../app";
+import {TaskDomainType, tasksApi, TaskType, UpdateDomainTaskModelType} from "../../../../shared/api";
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {addTodolistTC, clearState, fetchTodolists, removeTodolistTC} from "../todolists.reducer.ts";
 import {handleServerAppError, handleServerNetworkError} from "../../../../utils/error-utils.ts";
 import {AxiosError} from "axios";
 import {ResultCodes} from "../../../../shared/api/instance.ts";
-import {AppRootState} from "../../../../app/store.ts";
+import {AppRootState} from "../../../../app";
 
 
 export const fetchTasks = createAsyncThunk('tasks/fetchTasks', async (todolistId: string, thunkAPI) => {
@@ -111,6 +111,31 @@ export const updateTaskTC = createAsyncThunk('tasks/updateTask', async ({todolis
         }
     })
 
+
+export const changeTaskOrder = createAsyncThunk('tasks/changeTaskOrder', async ({todolistId, taskId, putAfterItemId}: {
+    todolistId: string, taskId: string, putAfterItemId: string
+}, thunkAPI) => {
+    const {dispatch, rejectWithValue} = thunkAPI
+    dispatch(setAppStatus({status: 'loading'}))
+    try {
+        const res = await tasksApi.reorderTask(todolistId, taskId, putAfterItemId);
+        if (res.data.resultCode === ResultCodes.OK) {
+            dispatch(setAppStatus({status: 'succeeded'}))
+            dispatch(setAppError({error: null}))
+            return {todolistId, taskId, putAfterItemId}
+        } else {
+            handleServerAppError(res.data, dispatch)
+            return rejectWithValue(null)
+        }
+    } catch (err) {
+        const error = err as AxiosError
+
+        handleServerNetworkError(error, dispatch)
+        return rejectWithValue(null)
+    }
+})
+
+
 const slice = createSlice({
     name: 'tasks',
     initialState: {} as TasksStateType,
@@ -155,6 +180,17 @@ const slice = createSlice({
             .addCase(updateTaskTC.fulfilled, (state, action) => {
                 const index = state[action.payload.task.todoListId].findIndex(task => task.id === action.payload.task.id)
                 state[action.payload.task.todoListId][index] = {...action.payload.task, entityStatus: 'idle'}
+            })
+            .addCase(changeTaskOrder.fulfilled, (state, action) => {
+                const indexOne = state[action.payload.todolistId].findIndex(task => task.id === action.payload.taskId)
+                const taskOne = state[action.payload.todolistId][indexOne]
+                const orderOne = taskOne.order
+                const indexTwo = state[action.payload.todolistId].findIndex(task => task.id === action.payload.putAfterItemId)
+                const taskTwo = state[action.payload.todolistId][indexTwo]
+                const orderTwo = taskTwo.order
+                taskOne.order = orderTwo
+                taskTwo.order = orderOne
+
             })
     }
 })
