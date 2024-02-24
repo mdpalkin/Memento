@@ -6,6 +6,7 @@ import {handleServerAppError, handleServerNetworkError} from "../../../../utils/
 import {AxiosError} from "axios";
 import {ResultCodes} from "../../../../shared/api/instance.ts";
 import {AppRootState} from "../../../../app";
+import {findTwoTasks} from "../../../../utils/findTwoTasks.ts";
 
 
 export const fetchTasks = createAsyncThunk('tasks/fetchTasks', async (todolistId: string, thunkAPI) => {
@@ -115,7 +116,20 @@ export const updateTaskTC = createAsyncThunk('tasks/updateTask', async ({todolis
 export const changeTaskOrder = createAsyncThunk('tasks/changeTaskOrder', async ({todolistId, taskId, putAfterItemId}: {
     todolistId: string, taskId: string, putAfterItemId: string
 }, thunkAPI) => {
-    const {dispatch, rejectWithValue} = thunkAPI
+    const {dispatch, getState, rejectWithValue} = thunkAPI
+
+    const state = getState() as AppRootState
+
+    const [taskOne, taskTwo] = findTwoTasks(state, todolistId, taskId, putAfterItemId)
+
+    if (taskOne.order > taskTwo.order) {
+        const message =
+            'Unfortunately, the server currently allows you to swap tasks only from top to bottom :('
+        dispatch(setAppError({error: message}))
+        rejectWithValue(null)
+    }
+
+
     dispatch(setAppStatus({status: 'loading'}))
     try {
         const res = await tasksApi.reorderTask(todolistId, taskId, putAfterItemId);
@@ -182,15 +196,18 @@ const slice = createSlice({
                 state[action.payload.task.todoListId][index] = {...action.payload.task, entityStatus: 'idle'}
             })
             .addCase(changeTaskOrder.fulfilled, (state, action) => {
-                const indexOne = state[action.payload.todolistId].findIndex(task => task.id === action.payload.taskId)
-                const taskOne = state[action.payload.todolistId][indexOne]
-                const orderOne = taskOne.order
-                const indexTwo = state[action.payload.todolistId].findIndex(task => task.id === action.payload.putAfterItemId)
-                const taskTwo = state[action.payload.todolistId][indexTwo]
-                const orderTwo = taskTwo.order
-                taskOne.order = orderTwo
-                taskTwo.order = orderOne
 
+                const indexOne = state[action.payload.todolistId].findIndex(task => task.id === action.payload.taskId)
+                const indexTwo = state[action.payload.todolistId].findIndex(task => task.id === action.payload.putAfterItemId)
+
+                const taskOne = state[action.payload.todolistId][indexOne]
+                const taskTwo = state[action.payload.todolistId][indexTwo]
+
+                const orderTwo = taskTwo.order
+
+                taskOne.order = orderTwo
+                taskTwo.order = orderTwo - 1
+                state[action.payload.todolistId].sort((a, b) => a.order - b.order)
             })
     }
 })

@@ -2,14 +2,14 @@ import {combineReducers} from "redux";
 import {tasksReducer} from "../features/TodolistList/Todolist/Task/tasks.reducer.ts";
 import {todolistsReducer} from "../features/TodolistList/Todolist/todolists.reducer.ts";
 import {appReducer} from "./app.reducer.ts";
-import {authReducer} from "../pages/Login/auth.reducer.ts";
+import {authReducer} from "../pages/Login";
 import {useDispatch} from "react-redux";
 import {configureStore} from "@reduxjs/toolkit";
 
 
 const rootReducer = combineReducers({
     tasks: tasksReducer,
-    todolists: todolistsReducer,
+    todolists: todolistsReducer,    
     app: appReducer,
     auth: authReducer
 });

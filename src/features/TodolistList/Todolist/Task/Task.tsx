@@ -1,13 +1,12 @@
-import {changeTaskOrder, fetchTasks, removeTaskTC, updateTaskTC} from "./tasks.reducer.ts";
+import {changeTaskOrder, removeTaskTC, updateTaskTC} from "./tasks.reducer.ts";
 import s from "../Todolist.module.css";
 import Checkbox from "antd/lib/checkbox/Checkbox";
 import {EditableSpan} from "../../../EditableSpan";
 import {Button} from "antd";
 import {DeleteOutlined} from "@ant-design/icons";
-import {useCallback} from "react";
+import {DragEvent, useCallback} from "react";
 import {TaskDomainType, TaskStatuses, TaskType} from "../../../../shared/api";
 import {useAppDispatch} from "../../../../app";
-import {DragEvent} from "react";
 
 export const Task = ({todolistId, task, currentTask, setCurrentTask}: Props) => {
 

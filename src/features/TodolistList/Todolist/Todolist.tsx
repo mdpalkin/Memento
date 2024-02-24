@@ -56,7 +56,9 @@ export const Todolist = memo(({title, todolistId, filter, entityStatus}: Props) 
 
     }, [filter, tasks])
 
+
     const isDisabled = entityStatus === 'loading'
+
 
 
     return (
