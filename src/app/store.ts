@@ -20,7 +20,6 @@ export const store = configureStore({
 
 export type AppRootState = ReturnType<typeof rootReducer>;
 
-export type StoreType = typeof store;
 
 export type DispatchType = typeof store.dispatch
 
